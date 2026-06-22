@@ -176,7 +176,27 @@ async function openWriteup(file, title) {
     const res = await fetch(file);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const md = await res.text();
-    contentEl.innerHTML = marked.parse(md);
+    const basePath = file.substring(0, file.lastIndexOf('/'));
+    const renderer = new marked.Renderer();
+    renderer.image = ({ href, title, text }) => {
+    let imagePath = href;
+    if (
+      !href.startsWith('http://') &&
+      !href.startsWith('https://') &&
+      !href.startsWith('/')
+    ) {
+        imagePath = `${basePath}/${href.replace(/^\.?\//, '')}`;
+        }
+    return `
+        <img
+        src="${imagePath}"
+        alt="${text || ''}"
+        ${title ? `title="${title}"` : ''}
+        loading="lazy"
+      >
+    `;
+  };
+  contentEl.innerHTML = marked.parse(md, { renderer });
   } catch (err) {
     contentEl.innerHTML = '<p style="color:var(--red)">Impossibile caricare il writeup.</p>';
     console.error('Errore caricamento markdown:', err);

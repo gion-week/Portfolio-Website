@@ -18,9 +18,10 @@ portfolio/
 ├── writeups/
 │   ├── index.json              # Metadati di tutti i writeup (aggiungere qui)
 │   ├── bandit/
-│   │   └── level-13.md         # Esempio writeup Bandit
+│       ├── screenshots/
+│   │   └── level-xx.md         # Esempio writeup Bandit
 │   └── natas/
-│       └── level-00.md         # Esempio writeup Natas
+│       └── level-xx.md         # Esempio writeup Natas
 └── README.md
 ```
 
