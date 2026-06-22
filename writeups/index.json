@@ -4,23 +4,119 @@
     "title": "Bandit Level 0 → 1",
     "category": "bandit",
     "level": "00",
-    "description": "Connessione SSH e lettura del file readme.",
+    "description": "Connessione SSH al server, lettura di un file con cat.",
     "file": "writeups/bandit/level-00.md"
+  },
+  {
+    "id": "bandit-01",
+    "title": "Bandit Level 1 → 2",
+    "category": "bandit",
+    "level": "01",
+    "description": "Lettura di un file con nome '-': percorso relativo vs stdin.",
+    "file": "writeups/bandit/level-01.md"
+  },
+  {
+    "id": "bandit-02",
+    "title": "Bandit Level 2 → 3",
+    "category": "bandit",
+    "level": "02",
+    "description": "Lettura di un file con spazi nel nome: quoting e percorso relativo.",
+    "file": "writeups/bandit/level-02.md"
+  },
+  {
+    "id": "bandit-03",
+    "title": "Bandit Level 3 → 4",
+    "category": "bandit",
+    "level": "03",
+    "description": "File nascosti e navigazione tra cartelle.",
+    "file": "writeups/bandit/level-03.md"
+  },
+  {
+    "id": "bandit-04",
+    "title": "Bandit Level 4 → 5",
+    "category": "bandit",
+    "level": "04",
+    "description": "Identificazione del tipo di file con il comando 'file' e uso della wildcard '*'.",
+    "file": "writeups/bandit/level-04.md"
+  },
+  {
+    "id": "bandit-05",
+    "title": "Bandit Level 5 → 6",
+    "category": "bandit",
+    "level": "05",
+    "description": "Ricerca di file per dimensione con il comando 'find'.",
+    "file": "writeups/bandit/level-05.md"
+  },
+  {
+    "id": "bandit-06",
+    "title": "Bandit Level 6 → 7",
+    "category": "bandit",
+    "level": "06",
+    "description": "Ricerca su tutto il filesystem con criteri 'find' combinati e redirezione di stderr.",
+    "file": "writeups/bandit/level-06.md"
+  },
+  {
+    "id": "bandit-07",
+    "title": "Bandit Level 7 → 8",
+    "category": "bandit",
+    "level": "07",
+    "description": "Ricerca di una stringa in un file di grandi dimensioni con grep e pipe.",
+    "file": "writeups/bandit/level-07.md"
+  },
+  {
+    "id": "bandit-08",
+    "title": "Bandit Level 8 → 9",
+    "category": "bandit",
+    "level": "08",
+    "description": "Isolamento della riga unica in un file con 'sort' e 'uniq -u'.",
+    "file": "writeups/bandit/level-08.md"
+  },
+  {
+    "id": "bandit-09",
+    "title": "Bandit Level 9 → 10",
+    "category": "bandit",
+    "level": "09",
+    "description": "Estrazione di stringhe leggibili da un file binario con 'strings', pipeline con grep e awk.",
+    "file": "writeups/bandit/level-09.md"
+  },
+  {
+    "id": "bandit-10",
+    "title": "Bandit Level 10 → 11",
+    "category": "bandit",
+    "level": "10",
+    "description": "Decodifica di contenuto in encoding Base64 con 'base64 -d'.",
+    "file": "writeups/bandit/level-10.md"
+  },
+  {
+    "id": "bandit-11",
+    "title": "Bandit Level 11 → 12",
+    "category": "bandit",
+    "level": "11",
+    "description": "Decifratura del cifrario ROT13 tramite il comando 'tr'.",
+    "file": "writeups/bandit/level-11.md"
+  },
+  {
+    "id": "bandit-12",
+    "title": "Bandit Level 12 → 13",
+    "category": "bandit",
+    "level": "12",
+    "description": "Ripristino di un file da hexdump con 'xxd' e decompressione iterativa con gzip, bzip2 e tar.",
+    "file": "writeups/bandit/level-12.md"
   },
   {
     "id": "bandit-13",
     "title": "Bandit Level 13 → 14",
     "category": "bandit",
     "level": "13",
-    "description": "Autenticazione SSH con chiave privata invece di password.",
-    "file": "writeups/bandit/level-13-README.md"
+    "description": "Autenticazione SSH con chiave privata RSA, uso di scp e gestione permessi con chmod.",
+    "file": "writeups/bandit/level-13.md"
   },
   {
     "id": "bandit-14",
     "title": "Bandit Level 14 → 15",
     "category": "bandit",
     "level": "14",
-    "description": "Invio della password corrente via TCP locale con netcat.",
+    "description": "Connessione TCP a un servizio locale con telnet e invio della password su porta.",
     "file": "writeups/bandit/level-14.md"
   },
   {
@@ -28,15 +124,151 @@
     "title": "Bandit Level 15 → 16",
     "category": "bandit",
     "level": "15",
-    "description": "Connessione SSL/TLS con openssl s_client.",
+    "description": "Connessione SSL/TLS con 'openssl s_client' e lettura del manuale man.",
     "file": "writeups/bandit/level-15.md"
+  },
+  {
+    "id": "bandit-16",
+    "title": "Bandit Level 16 → 17",
+    "category": "bandit",
+    "level": "16",
+    "description": "Scansione di porte e servizi con nmap, identificazione del servizio SSL e uso di chiave RSA come credenziale.",
+    "file": "writeups/bandit/level-16.md"
+  },
+  {
+    "id": "bandit-17",
+    "title": "Bandit Level 17 → 18",
+    "category": "bandit",
+    "level": "17",
+    "description": "Confronto di due file per trovare la riga modificata con 'diff'.",
+    "file": "writeups/bandit/level-17.md"
+  },
+  {
+    "id": "bandit-18",
+    "title": "Bandit Level 18 → 19",
+    "category": "bandit",
+    "level": "18",
+    "description": "Esecuzione di comandi remoti via SSH senza shell interattiva, .bashrc e tipi di shell.",
+    "file": "writeups/bandit/level-18.md"
+  },
+  {
+    "id": "bandit-19",
+    "title": "Bandit Level 19 → 20",
+    "category": "bandit",
+    "level": "19",
+    "description": "Bit setuid: esecuzione di un binario con privilegi elevati per privilege escalation.",
+    "file": "writeups/bandit/level-19.md"
+  },
+  {
+    "id": "bandit-20",
+    "title": "Bandit Level 20 → 21",
+    "category": "bandit",
+    "level": "20",
+    "description": "Gestione di processi concorrenti con tmux e job control, netcat in ascolto e command-line injection.",
+    "file": "writeups/bandit/level-20.md"
+  },
+  {
+    "id": "bandit-21",
+    "title": "Bandit Level 21 → 22",
+    "category": "bandit",
+    "level": "21",
+    "description": "Cron e cronjob: lettura di script pianificati in /etc/cron.d/.",
+    "file": "writeups/bandit/level-21.md"
+  },
+  {
+    "id": "bandit-22",
+    "title": "Bandit Level 22 → 23",
+    "category": "bandit",
+    "level": "22",
+    "description": "Analisi di script cron, hashing con md5sum e parsing dell'output con cut.",
+    "file": "writeups/bandit/level-22.md"
+  },
+  {
+    "id": "bandit-23",
+    "title": "Bandit Level 23 → 24",
+    "category": "bandit",
+    "level": "23",
+    "description": "Scrittura di uno script per cron con permessi per esecuzione cross-utente.",
+    "file": "writeups/bandit/level-23.md"
+  },
+  {
+    "id": "bandit-24",
+    "title": "Bandit Level 24 → 25",
+    "category": "bandit",
+    "level": "24",
+    "description": "Brute-force di un PIN a 4 cifre con script bash, brace expansion e 'ss' per porte locali.",
+    "file": "writeups/bandit/level-24.md"
+  },
+  {
+    "id": "bandit-25",
+    "title": "Bandit Level 25 → 26",
+    "category": "bandit",
+    "level": "25",
+    "description": "Shell non standard come login shell: fuga da 'more' tramite vim.",
+    "file": "writeups/bandit/level-25.md"
+  },
+  {
+    "id": "bandit-26",
+    "title": "Bandit Level 26 → 27",
+    "category": "bandit",
+    "level": "26",
+    "description": "Binario setuid: privilege escalation dalla shell vim ottenuta al livello precedente.",
+    "file": "writeups/bandit/level-26.md"
+  },
+  {
+    "id": "bandit-27",
+    "title": "Bandit Level 27 → 28",
+    "category": "bandit",
+    "level": "27",
+    "description": "Clonazione di un repository via SSH con 'git clone' e ispezione della struttura.",
+    "file": "writeups/bandit/level-27.md"
+  },
+  {
+    "id": "bandit-28",
+    "title": "Bandit Level 28 → 29",
+    "category": "bandit",
+    "level": "28",
+    "description": "Recupero di dati rimossi dalla storia dei commit con 'git log' e 'git show'.",
+    "file": "writeups/bandit/level-28.md"
+  },
+  {
+    "id": "bandit-29",
+    "title": "Bandit Level 29 → 30",
+    "category": "bandit",
+    "level": "29",
+    "description": "Branch remoti git, packed-refs, 'git checkout' e struttura interna di .git/.",
+    "file": "writeups/bandit/level-29.md"
+  },
+  {
+    "id": "bandit-30",
+    "title": "Bandit Level 30 → 31",
+    "category": "bandit",
+    "level": "30",
+    "description": "Oggetti git (blob/commit/tree) e recupero del contenuto tramite 'git tag'.",
+    "file": "writeups/bandit/level-30.md"
+  },
+  {
+    "id": "bandit-31",
+    "title": "Bandit Level 31 → 32",
+    "category": "bandit",
+    "level": "31",
+    "description": "Ciclo completo git: add, commit, push con gestione di .gitignore.",
+    "file": "writeups/bandit/level-31.md"
+  },
+  {
+    "id": "bandit-32",
+    "title": "Bandit Level 32 → 33",
+    "category": "bandit",
+    "level": "32",
+    "description": "Escape da una shell ristretta uppercase tramite la variabile speciale $0.",
+    "file": "writeups/bandit/level-32.md"
   },
   {
     "id": "natas-00",
     "title": "Natas Level 0",
     "category": "natas",
     "level": "00",
-    "description": "Ispezione del sorgente HTML per trovare la password nascosta.",
+    "description": "Ispezione del sorgente HTML per trovare la password nascosta in un commento.",
     "file": "writeups/natas/level-00.md"
   },
   {
@@ -44,7 +276,7 @@
     "title": "Natas Level 1",
     "category": "natas",
     "level": "01",
-    "description": "Bypass del blocco del tasto destro tramite Developer Tools.",
+    "description": "Bypass del blocco del tasto destro tramite Developer Tools del browser.",
     "file": "writeups/natas/level-01.md"
   },
   {
@@ -52,7 +284,7 @@
     "title": "Natas Level 2",
     "category": "natas",
     "level": "02",
-    "description": "Directory listing e accesso diretto a file non linkati.",
+    "description": "Directory listing abilitato: accesso diretto a file non linkati dalla pagina.",
     "file": "writeups/natas/level-02.md"
   }
 ]
