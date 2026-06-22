@@ -1,0 +1,58 @@
+[
+  {
+    "id": "bandit-00",
+    "title": "Bandit Level 0 → 1",
+    "category": "bandit",
+    "level": "00",
+    "description": "Connessione SSH e lettura del file readme.",
+    "file": "writeups/bandit/level-00.md"
+  },
+  {
+    "id": "bandit-13",
+    "title": "Bandit Level 13 → 14",
+    "category": "bandit",
+    "level": "13",
+    "description": "Autenticazione SSH con chiave privata invece di password.",
+    "file": "writeups/bandit/level-13-README.md"
+  },
+  {
+    "id": "bandit-14",
+    "title": "Bandit Level 14 → 15",
+    "category": "bandit",
+    "level": "14",
+    "description": "Invio della password corrente via TCP locale con netcat.",
+    "file": "writeups/bandit/level-14.md"
+  },
+  {
+    "id": "bandit-15",
+    "title": "Bandit Level 15 → 16",
+    "category": "bandit",
+    "level": "15",
+    "description": "Connessione SSL/TLS con openssl s_client.",
+    "file": "writeups/bandit/level-15.md"
+  },
+  {
+    "id": "natas-00",
+    "title": "Natas Level 0",
+    "category": "natas",
+    "level": "00",
+    "description": "Ispezione del sorgente HTML per trovare la password nascosta.",
+    "file": "writeups/natas/level-00.md"
+  },
+  {
+    "id": "natas-01",
+    "title": "Natas Level 1",
+    "category": "natas",
+    "level": "01",
+    "description": "Bypass del blocco del tasto destro tramite Developer Tools.",
+    "file": "writeups/natas/level-01.md"
+  },
+  {
+    "id": "natas-02",
+    "title": "Natas Level 2",
+    "category": "natas",
+    "level": "02",
+    "description": "Directory listing e accesso diretto a file non linkati.",
+    "file": "writeups/natas/level-02.md"
+  }
+]
