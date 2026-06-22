@@ -1,63 +1,75 @@
-# Natas Level 0
-
-**Wargame:** OverTheWire — Natas  
-**Livello:** 0  
-**URL:** `http://natas0.natas.labs.overthewire.org`  
-**Credenziali:** `natas0 / natas0`  
-**Categoria:** Source code inspection
-
----
+# Natas Level 0 → 1
 
 ## Obiettivo
 
-Trovare la password per natas1 nascosta nella pagina web del livello 0.
+La pagina del livello afferma che la password per il livello successivo è presente sulla pagina stessa. L'obiettivo è trovarla.
+
+---
+
+## Informazioni di accesso
+
+| Campo | Valore |
+|-------|--------|
+| URL | `http://natas0.natas.labs.overthewire.org` |
+| Username | `natas0` |
+| Password | `natas0` |
+
+---
+
+## Strumenti / concetti utili
+
+- `View Page Source` (tasto destro → "Visualizza sorgente pagina", oppure `Ctrl+U`) — mostra l'HTML grezzo inviato dal server, incluso ciò che il browser non renderizza
+- Commenti HTML (`<!-- ... -->`) — blocchi di testo ignorati dal browser in fase di rendering ma presenti nel sorgente
 
 ---
 
 ## Soluzione
 
-### 1. Accesso alla pagina
+### Step 1 – Analisi della pagina renderizzata
 
-Navigando all'URL con le credenziali fornite, il sito mostra:
+Aprendo l'URL nel browser la pagina mostra un solo elemento visibile:
 
-> "You can find the password for the next level on this page."
+> *You can find the password for the next level on this page.*
 
-La password non è visibile nel testo renderizzato.
+Non ci sono form, link, immagini o altri elementi interattivi. Il contenuto visibile non contiene la password.
 
-### 2. Ispezione del sorgente HTML
+![Pagina renderizzata con menu contestuale aperto su "View Page Source"](./screenshots/00-source.png)
 
-Il contenuto può essere nascosto nel codice HTML non renderizzato dal browser.  
-Si apre il sorgente della pagina con:
+### Step 2 – Ispezione del sorgente HTML
 
-- **Firefox / Chrome:** `Ctrl+U` oppure clic destro → *Visualizza sorgente pagina*
-- **Oppure:** Developer Tools → tab *Inspector*
-
-Nel sorgente HTML si trova un commento HTML:
+Aprendo il sorgente della pagina (`Ctrl+U` oppure tasto destro → *View Page Source*) si trova alla riga 16 un commento HTML contenente la password in chiaro:
 
 ```html
 <!--The password for natas1 is [REDACTED] -->
 ```
 
-I commenti HTML (`<!-- ... -->`) non vengono renderizzati dal browser ma sono presenti nel codice sorgente e visibili a chiunque.
+![Sorgente HTML con commento contenente la password](./screenshots/00-password.png)
+
+### Step 3 – Password trovata
+
+La password per accedere al livello 1 è contenuta in un commento HTML nel sorgente della pagina, non visibile nella pagina renderizzata dal browser.
 
 ---
 
-## Concetti chiave
+## Note e osservazioni
 
-**Commenti HTML:**  
-Non sono un meccanismo di sicurezza. Non sono cifrati, non sono nascosti — sono semplicemente non renderizzati visivamente. Chiunque acceda al sorgente può leggerli.
+**Perché ispezionare il sorgente è stato il primo passo**
 
-**Implicazione pratica:**  
-Non inserire mai credenziali, token, o informazioni sensibili in commenti HTML. Valgono le stesse regole del codice lato server: il browser riceve l'HTML completo prima di renderizzarlo.
+La pagina afferma esplicitamente che la password è presente "su questa pagina", ma la pagina renderizzata non mostra nulla di utile. Questa è la situazione tipica che in web security porta immediatamente a guardare il sorgente HTML: il browser renderizza solo ciò che è visibile, come testo, immagini e form, ma scarta silenziosamente tutto il resto. Tra le cose che il browser non mostra mai all'utente finale ci sono:
 
----
+- **Commenti HTML** (`<!-- ... -->`): usati dagli sviluppatori per note interne, debug o — come in questo caso — per "nascondere" informazioni in modo del tutto inefficace
+- **Attributi `hidden`** su elementi HTML
+- **Variabili JavaScript** definite nel `<head>` ma non stampate a schermo
+- **Meta tag** nel `<head>`
 
-## Metodo alternativo
+In questo livello il sorgente contiene anche la riga:
 
-Via `curl` da terminale, senza aprire il browser:
-
-```bash
-curl -u natas0:natas0 http://natas0.natas.labs.overthewire.org | grep -i password
+```javascript
+var wechallinfo = { "level": "natas0", "pass": "natas0" };
 ```
 
-Output diretto della riga con il commento contenente la password.
+Questo è un artefatto del sistema di OverTheWire per tracciare il livello, non rilevante per la soluzione, ma conferma che il sorgente contiene informazioni non visibili nella pagina.
+
+**Commenti HTML e sicurezza**
+
+I commenti HTML non offrono alcuna protezione: sono inviati dal server al browser esattamente come il resto del documento e sono leggibili da chiunque. Lasciare credenziali, path interni, note di debug o logica applicativa nei commenti HTML di una pagina pubblica è una vulnerabilità classificata come **CWE-615** (*Inclusion of Sensitive Information in Source Code Comments*).

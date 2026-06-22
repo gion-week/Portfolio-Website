@@ -268,7 +268,7 @@
     "title": "Natas Level 0",
     "category": "natas",
     "level": "00",
-    "description": "Ispezione del sorgente HTML per trovare la password nascosta in un commento.",
+    "description": "Ispezione sorgente HTML.",
     "file": "writeups/natas/level-00.md"
   },
   {
@@ -276,7 +276,7 @@
     "title": "Natas Level 1",
     "category": "natas",
     "level": "01",
-    "description": "Bypass del blocco del tasto destro tramite Developer Tools del browser.",
+    "description": "Ispezione sorgente HTML, tasto destro disabilitato.",
     "file": "writeups/natas/level-01.md"
   },
   {
@@ -284,7 +284,7 @@
     "title": "Natas Level 2",
     "category": "natas",
     "level": "02",
-    "description": "Directory listing abilitato: accesso diretto a file non linkati dalla pagina.",
+    "description": "Directory listing, file nascosti sul server web.",
     "file": "writeups/natas/level-02.md"
   }
 ]
