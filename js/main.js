@@ -13,9 +13,9 @@ function initTerminal() {
     { type: 'cmd',    text: 'whoami' },
     { type: 'output', text: 'Alberto Casalicchio — IT Junior & Security Enthusiast' },
     { type: 'cmd',    text: 'cat location.txt' },
-    { type: 'output', text: 'Italia 🇮🇹' },
+    { type: 'output', text: 'Orbassano (TO) - Piemonte, Italia' },
     { type: 'cmd',    text: 'ls ./projects/' },
-    { type: 'output', text: 'bandit-writeups/   natas-writeups/   port-scanner/' },
+    { type: 'output', text: 'bandit-writeups/   natas-writeups/   port-scanner/   Windows 10 Lab Setup/' },
     { type: 'cmd',    text: 'echo $GOAL' },
     { type: 'output', text: 'Cybersecurity Professional' },
   ];

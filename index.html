@@ -14,11 +14,11 @@
     <nav class="nav-container">
       <a href="#about" class="nav-logo"><span class="accent">~/</span>portfolio</a>
       <ul class="nav-links" role="list">
-        <li><a href="#about"    class="nav-link">about</a></li>
-        <li><a href="#skills"   class="nav-link">skills</a></li>
-        <li><a href="#projects" class="nav-link">progetti</a></li>
-        <li><a href="#writeups" class="nav-link">writeups</a></li>
-        <li><a href="#contact"  class="nav-link">contatti</a></li>
+        <li><a href="#about"    class="nav-link">About Me</a></li>
+        <li><a href="#skills"   class="nav-link">Skills</a></li>
+        <li><a href="#projects" class="nav-link">Progetti</a></li>
+        <li><a href="#writeups" class="nav-link">Writeups</a></li>
+        <li><a href="#contact"  class="nav-link">Contatti</a></li>
       </ul>
       <button class="nav-toggle" aria-label="Apri menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -46,9 +46,8 @@
 
         <div class="hero-bio">
           <h1 class="hero-name">Alberto Casalicchio</h1>
-          <p class="hero-tagline">IT Junior &amp; Security Enthusiast — Italia</p>
+          <p class="hero-tagline">IT Junior &amp; Cybersecurity Enthusiast</p>
           <p class="hero-desc">
-            <!-- Sostituisci con la tua bio. Esempio: -->
             Diplomato in informatica (perito informatico), orientato alla cybersecurity.
             Mi interesso di pentesting, wargame CTF e automazione. Sto costruendo
             un percorso strutturato verso ruoli in ambito security.
@@ -75,7 +74,9 @@
             <ul class="skill-list" role="list">
               <li>Windows 10 / 11</li>
               <li>Ubuntu Linux</li>
-              <li>Kali Linux <span class="tag tag--learning">in apprendimento</span></li>
+              <li>Arch Linux</li>
+              <li>Parrot OS</li>
+              <li>pfSense <span class="tag tag--learning">in apprendimento</span></li>
             </ul>
           </div>
 
@@ -83,9 +84,13 @@
             <h3 class="skill-card-title">Tools &amp; Environment</h3>
             <ul class="skill-list" role="list">
               <li>Git &amp; GitHub</li>
-              <li>VSCode (SSH remoto)</li>
+              <li>VSCode</li>
+              <li>SSH Remote</li>
               <li>VMware Workstation</li>
-              <li>Bash scripting</li>
+              <li>VirtualBox</li>
+              <li>Burp Suite</li>
+              <li>Bash</li>
+              <li>CLI</li>
               <li>PowerShell</li>
             </ul>
           </div>
@@ -96,6 +101,8 @@
               <li>Python 3 <span class="tag tag--learning">in apprendimento</span></li>
               <li>Bash / Shell scripting</li>
               <li>HTML / CSS / JS</li>
+              <li>PHP  / MySQL</li>
+              <li>C++</li>
             </ul>
           </div>
 
@@ -106,6 +113,8 @@
               <li>CTF — OverTheWire Natas</li>
               <li>Linux privilege escalation (basics)</li>
               <li>Web security fundamentals</li>
+              <li>Cybersecurity principles &amp; best practices</li>
+              <li>Network security basics</li>
               <li>Port scanning / service enumeration</li>
             </ul>
           </div>
@@ -114,16 +123,21 @@
             <h3 class="skill-card-title">Networking</h3>
             <ul class="skill-list" role="list">
               <li>TCP/IP stack</li>
-              <li>DNS, HTTP/S, SSH</li>
-              <li>Subnetting (basics)</li>
+              <li>OSI model</li>
+              <li>DNS, DHCP, HTTP/S, FTP, SSH, SMTP, ARP, ICMP</li>
+              <li>Firewall, NAT, ACL</li>
+              <li>VPN, concetti IPSec, SSL/TLS</li>
+              <li>Subnetting basics</li>
             </ul>
           </div>
 
           <div class="skill-card">
             <h3 class="skill-card-title">Certificazioni</h3>
             <ul class="skill-list" role="list">
-              <li>CompTIA A+ <span class="tag tag--learning">in studio</span></li>
-              <!-- Aggiungi certificazioni conseguite -->
+              <li>Google IT Support Professional Certificate(v.3)</li>
+              <li>Introduction to Cybersecurity by Cisco</li>
+              <li>CompTIA Security+ <span class="tag tag--learning">in studio</span></li>
+              <li>Junior Cybersecurity Analyst Path (HackTheBox Academy) <span class="tag tag--learning">in studio</span></li>
             </ul>
           </div>
 
@@ -140,7 +154,7 @@
 
           <article class="project-card">
             <div class="project-card-header">
-              <h3 class="project-title">OverTheWire Bandit — Writeups</h3>
+              <h3 class="project-title">OverTheWire - Bandit</h3>
               <a href="https://github.com/gion-week/bandit-overthewire" class="project-link" target="_blank" rel="noopener" aria-label="Vedi repo Bandit su GitHub">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
               </a>
@@ -148,7 +162,7 @@
             <p class="project-desc">Documentazione completa dei livelli 0–32 del wargame Bandit (OverTheWire). Ogni livello include spiegazione dei comandi utilizzati, motivazioni tecniche, ragionamenti e screenshot di supporto alla lettura.</p>
             <div class="project-tags">
               <span class="tag">Linux CLI</span>
-              <span class="tag">Bash</span>
+              <span class="tag">Bash scripting</span>
               <span class="tag">SSH</span>
               <span class="tag">TCP/IP</span>
               <span class="tag">Troubleshooting</span>
@@ -159,16 +173,18 @@
 
           <article class="project-card">
             <div class="project-card-header">
-              <h3 class="project-title">OverTheWire Natas — Writeups</h3>
+              <h3 class="project-title">OverTheWire - Natas</h3>
               <a href="https://github.com/gion-week/natas-overthewire" class="project-link" target="_blank" rel="noopener" aria-label="Vedi repo Natas su GitHub">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
               </a>
             </div>
-            <p class="project-desc">Writeup dei livelli 0–34 del wargame Natas (OverTheWire). Ogni livello include spiegazione dei comandi utilizzati, motivazioni tecniche, ragionamenti e screenshot di supporto alla lettura.</p>
+            <p class="project-desc">Documentazione completa dei livelli 0–34 del wargame Natas (OverTheWire). Ogni livello include spiegazione dei comandi utilizzati, motivazioni tecniche, ragionamenti e screenshot di supporto alla lettura.</p>
             <div class="project-tags">
               <span class="tag">Web Security</span>
+              <span class="tag">Curl</span>
               <span class="tag">HTTP</span>
-              <span class="tag">CTF</span>
+              <span class="tag">ZAP Proxy / Burp Suite</span>
+              <span class="tag tag--wip">In corso</span>
             </div>
           </article>
 
@@ -183,6 +199,27 @@
             <div class="project-tags">
               <span class="tag">Python 3</span>
               <span class="tag">Networking</span>
+              <span class="tag">Port Scanning</span>
+              <span class="tag tag--wip">In corso</span>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-card-header">
+              <h3 class="project-title">Windows 10 Lab Setup</h3>
+              <a href="https://github.com/gion-week/win10-lab-setup" class="project-link" target="_blank" rel="noopener" aria-label="Vedi repo Port Scanner su GitHub">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              </a>
+            </div>
+            <p class="project-desc">Setup per laboratorio Windows 10 con VMs configurate per esperimenti di sicurezza.</p>
+            <div class="project-tags">
+              <span class="tag">Installazione Windows 10</span>
+              <span class="tag">Partizioni disco</span>
+              <span class="tag">Onboarding Setup</span>
+              <span class="tag">Virtualizzazione</span>
+              <span class="tag">Sicurezza</span>
+              <span class="tag">Active Directory</span>
+              <span class="tag">BitLocker</span>
               <span class="tag tag--wip">In corso</span>
             </div>
           </article>
