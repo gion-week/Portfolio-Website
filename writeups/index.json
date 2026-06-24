@@ -265,7 +265,7 @@
   },
   {
     "id": "natas-00",
-    "title": "Natas Level 0",
+    "title": "Natas Level 0 → 1",
     "category": "natas",
     "level": "00",
     "description": "Ispezione sorgente HTML.",
@@ -273,7 +273,7 @@
   },
   {
     "id": "natas-01",
-    "title": "Natas Level 1",
+    "title": "Natas Level 1 → 2",
     "category": "natas",
     "level": "01",
     "description": "Ispezione sorgente HTML, tasto destro disabilitato.",
@@ -281,10 +281,74 @@
   },
   {
     "id": "natas-02",
-    "title": "Natas Level 2",
+    "title": "Natas Level 2 → 3",
     "category": "natas",
     "level": "02",
     "description": "Directory listing, file nascosti sul server web.",
     "file": "writeups/natas/level-02.md"
+  },
+  {
+    "id": "natas-03",
+    "title": "Natas Level 3 → 4",
+    "category": "natas",
+    "level": "03",
+    "description": "`robots.txt`, directory listing.",
+    "file": "writeups/natas/level-03.md"
+  },
+  {
+    "id": "natas-04",
+    "title": "Natas Level 4 → 5",
+    "category": "natas",
+    "level": "04",
+    "description": "HTTP Referer header, controllo accessi lato server.",
+    "file": "writeups/natas/level-04.md"
+  },
+  {
+    "id": "natas-05",
+    "title": "Natas Level 5 → 6",
+    "category": "natas",
+    "level": "05",
+    "description": "Cookie manipulation.",
+    "file": "writeups/natas/level-05.md"
+  },
+  {
+    "id": "natas-06",
+    "title": "Natas Level 6 → 7",
+    "category": "natas",
+    "level": "06",
+    "description": "Inclusione file PHP (`include`), ispezione sorgente.",
+    "file": "writeups/natas/level-06.md"
+  },
+  {
+    "id": "natas-07",
+    "title": "Natas Level 7 → 8",
+    "category": "natas",
+    "level": "07",
+    "description": "Local File Inclusion (LFI).",
+    "file": "writeups/natas/level-07.md"
+  },
+  {
+    "id": "natas-08",
+    "title": "Natas Level 8 → 9",
+    "category": "natas",
+    "level": "08",
+    "description": "Decodifica multi-step (`base64`, `strrev`, `bin2hex`).",
+    "file": "writeups/natas/level-08.md"
+  },
+  {
+    "id": "natas-09",
+    "title": "Natas Level 9 → 10",
+    "category": "natas",
+    "level": "09",
+    "description": "Command injection tramite `passthru()` e `grep`.",
+    "file": "writeups/natas/level-09.md"
+  },
+  {
+    "id": "natas-10",
+    "title": "Natas Level 10 → 11",
+    "category": "natas",
+    "level": "10",
+    "description": "Command injection con filtro su caratteri speciali.",
+    "file": "writeups/natas/level-10.md"
   }
 ]
