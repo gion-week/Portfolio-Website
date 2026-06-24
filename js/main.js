@@ -95,67 +95,83 @@ function initTerminal() {
   setTimeout(runNext, 400);
 }
 
-/* ── CTF WRITEUPS — LOADER E FILTRI ─────────────────────────────────────── */
+/* ── CTF WRITEUPS — ACCORDION ────────────────────────────────────────────── */
 let allWriteups = [];
 
 async function loadWriteups() {
-  const listEl = document.getElementById('writeup-list');
-  if (!listEl) return;
+  const accordion = document.getElementById('writeup-accordion');
+  if (!accordion) return;
 
   try {
     const res = await fetch('writeups/index.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     allWriteups = await res.json();
-    renderWriteups('all');
+    renderAccordion();
   } catch (err) {
-    listEl.innerHTML = '<p class="writeup-loading">Impossibile caricare i writeup. Assicurati di aprire il sito da un server HTTP.</p>';
+    accordion.innerHTML = '<p class="writeup-loading">Impossibile caricare i writeup. Assicurati di aprire il sito da un server HTTP.</p>';
     console.error('Errore caricamento writeups:', err);
   }
 }
 
-function renderWriteups(filter) {
-  const listEl = document.getElementById('writeup-list');
-  if (!listEl) return;
+function renderAccordion() {
+  const accordion = document.getElementById('writeup-accordion');
+  if (!accordion) return;
 
-  const filtered = filter === 'all'
-    ? allWriteups
-    : allWriteups.filter(w => w.category === filter);
+  // Raggruppa per categoria mantenendo l'ordine di prima apparizione
+  const groups = {};
+  allWriteups.forEach(w => {
+    if (!groups[w.category]) groups[w.category] = [];
+    groups[w.category].push(w);
+  });
 
-  if (filtered.length === 0) {
-    listEl.innerHTML = '<p class="writeup-loading">Nessun writeup in questa categoria.</p>';
-    return;
-  }
-
-  listEl.innerHTML = filtered.map(w => `
-    <div
-      class="writeup-card"
-      tabindex="0"
-      role="button"
-      aria-label="Apri writeup: ${escapeAttr(w.title)}"
-      data-file="${escapeAttr(w.file)}"
-      data-title="${escapeAttr(w.title)}"
-    >
-      <span class="writeup-card-category">${escapeHtml(w.category)} — Level ${escapeHtml(String(w.level))}</span>
-      <span class="writeup-card-title">${escapeHtml(w.title)}</span>
-      ${w.description ? `<span class="writeup-card-desc">${escapeHtml(w.description)}</span>` : ''}
+  accordion.innerHTML = Object.entries(groups).map(([cat, writeups]) => `
+    <div class="accordion-section">
+      <button
+        class="accordion-header"
+        aria-expanded="false"
+        aria-controls="accordion-body-${cat}"
+      >
+        <span class="accordion-label">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
+        <span class="accordion-count">${writeups.length} livelli</span>
+        <span class="accordion-icon" aria-hidden="true">▸</span>
+      </button>
+      <div class="accordion-body" id="accordion-body-${cat}" hidden>
+        <div class="writeup-grid">
+          ${writeups.map(w => `
+            <div
+              class="writeup-card"
+              tabindex="0"
+              role="button"
+              aria-label="Apri writeup: ${escapeAttr(w.title)}"
+              data-file="${escapeAttr(w.file)}"
+              data-title="${escapeAttr(w.title)}"
+            >
+              <span class="writeup-card-level">Level ${escapeHtml(String(w.level))}</span>
+              <span class="writeup-card-title">${escapeHtml(w.title)}</span>
+              ${w.description ? `<span class="writeup-card-desc">${escapeHtml(w.description)}</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
     </div>
   `).join('');
 
-  // Gestori click e keyboard su ogni card
-  listEl.querySelectorAll('.writeup-card').forEach(card => {
+  // Toggle accordion
+  accordion.querySelectorAll('.accordion-header').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      const body = document.getElementById(btn.getAttribute('aria-controls'));
+      if (body) body.hidden = expanded;
+    });
+  });
+
+  // Apertura writeup via click o tastiera
+  accordion.querySelectorAll('.writeup-card').forEach(card => {
     const open = () => openWriteup(card.dataset.file, card.dataset.title);
     card.addEventListener('click', open);
-    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
-  });
-}
-
-function initFilters() {
-  const buttons = document.querySelectorAll('.filter-btn');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('filter-btn--active'));
-      btn.classList.add('filter-btn--active');
-      renderWriteups(btn.dataset.filter);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
   });
 }
@@ -281,7 +297,6 @@ function escapeAttr(str) {
 document.addEventListener('DOMContentLoaded', () => {
   initTerminal();
   initNav();
-  initFilters();
   initModal();
   loadWriteups();
 });
