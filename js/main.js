@@ -95,85 +95,130 @@ function initTerminal() {
   setTimeout(runNext, 400);
 }
 
-/* ── CTF WRITEUPS — ACCORDION ────────────────────────────────────────────── */
+/* ── CTF WRITEUPS — WARGAME MODAL ───────────────────────────────────────── */
+
+// Descrizioni e link per ogni wargame.
+// Per aggiungere un nuovo wargame: aggiungi una voce qui e le entries in index.json.
+const WARGAME_INFO = {
+  bandit: {
+    label: 'OverTheWire — Bandit',
+    url: 'https://overthewire.org/wargames/bandit/',
+    desc: 'Bandit è il wargame di partenza di OverTheWire, pensato per chi si avvicina alla sicurezza informatica da zero. Insegna i fondamentali della command line Linux attraverso sfide progressive: gestione di file e permessi, SSH, processi, networking e crittografia di base.'
+  },
+  natas: {
+    label: 'OverTheWire — Natas',
+    url: 'https://overthewire.org/wargames/natas/',
+    desc: 'Natas insegna i fondamentali della sicurezza web lato server. Ogni livello introduce una categoria di vulnerabilità reale: source code inspection, directory traversal, bypass di autenticazione, SQL injection e code execution.'
+  }
+};
+
 let allWriteups = [];
 
 async function loadWriteups() {
-  const accordion = document.getElementById('writeup-accordion');
-  if (!accordion) return;
-
   try {
     const res = await fetch('writeups/index.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     allWriteups = await res.json();
-    renderAccordion();
+    renderWargameButtons();
   } catch (err) {
-    accordion.innerHTML = '<p class="writeup-loading">Impossibile caricare i writeup. Assicurati di aprire il sito da un server HTTP.</p>';
+    const container = document.getElementById('wargame-buttons');
+    if (container) container.innerHTML = '<p class="writeup-loading">Impossibile caricare i writeup. Assicurati di aprire il sito da un server HTTP.</p>';
     console.error('Errore caricamento writeups:', err);
   }
 }
 
-function renderAccordion() {
-  const accordion = document.getElementById('writeup-accordion');
-  if (!accordion) return;
+function renderWargameButtons() {
+  const container = document.getElementById('wargame-buttons');
+  if (!container) return;
 
-  // Raggruppa per categoria mantenendo l'ordine di prima apparizione
-  const groups = {};
+  // Ottieni categorie uniche nell'ordine in cui appaiono in index.json
+  const seen = new Set();
+  const categories = [];
   allWriteups.forEach(w => {
-    if (!groups[w.category]) groups[w.category] = [];
-    groups[w.category].push(w);
+    if (!seen.has(w.category)) { seen.add(w.category); categories.push(w.category); }
   });
 
-  accordion.innerHTML = Object.entries(groups).map(([cat, writeups]) => `
-    <div class="accordion-section">
-      <button
-        class="accordion-header"
-        aria-expanded="false"
-        aria-controls="accordion-body-${cat}"
-      >
-        <span class="accordion-label">${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
-        <span class="accordion-count">${writeups.length} livelli</span>
-        <span class="accordion-icon" aria-hidden="true">▸</span>
-      </button>
-      <div class="accordion-body" id="accordion-body-${cat}" hidden>
-        <div class="writeup-grid">
-          ${writeups.map(w => `
-            <div
-              class="writeup-card"
-              tabindex="0"
-              role="button"
-              aria-label="Apri writeup: ${escapeAttr(w.title)}"
-              data-file="${escapeAttr(w.file)}"
-              data-title="${escapeAttr(w.title)}"
-            >
-              <span class="writeup-card-level">Level ${escapeHtml(String(w.level))}</span>
-              <span class="writeup-card-title">${escapeHtml(w.title)}</span>
-              ${w.description ? `<span class="writeup-card-desc">${escapeHtml(w.description)}</span>` : ''}
-            </div>
-          `).join('')}
-        </div>
+  container.innerHTML = categories.map(cat => {
+    const info = WARGAME_INFO[cat];
+    const label = info ? info.label.split('—')[1].trim() : cat.charAt(0).toUpperCase() + cat.slice(1);
+    return `<button class="btn btn--outline wargame-btn" data-wargame="${escapeAttr(cat)}">${label}</button>`;
+  }).join('');
+
+  container.querySelectorAll('.wargame-btn').forEach(btn => {
+    btn.addEventListener('click', () => openWargameModal(btn.dataset.wargame));
+  });
+}
+
+function openWargameModal(category) {
+  const modal    = document.getElementById('wargame-modal');
+  const catEl    = document.getElementById('wargame-modal-category');
+  const titleEl  = document.getElementById('wargame-modal-title');
+  const infoEl   = document.getElementById('wargame-modal-info');
+  const levelsEl = document.getElementById('wargame-modal-levels');
+  if (!modal) return;
+
+  const info   = WARGAME_INFO[category] || { label: category, url: '#', desc: '' };
+  const levels = allWriteups.filter(w => w.category === category);
+  const [prefix, name] = info.label.includes('—')
+    ? info.label.split('—').map(s => s.trim())
+    : ['Wargame', info.label];
+
+  catEl.textContent  = prefix;
+  titleEl.textContent = name;
+
+  infoEl.innerHTML = `
+    <p>${escapeHtml(info.desc)}</p>
+    <a href="${escapeAttr(info.url)}" target="_blank" rel="noopener">
+      ${escapeHtml(info.url)} ↗
+    </a>
+  `;
+
+  levelsEl.innerHTML = levels.map(w => `
+    <div
+      class="level-item"
+      tabindex="0"
+      role="button"
+      aria-label="Apri writeup: ${escapeAttr(w.title)}"
+      data-file="${escapeAttr(w.file)}"
+      data-title="${escapeAttr(w.title)}"
+    >
+      <span class="level-item-number">Level ${escapeHtml(String(w.level))}</span>
+      <div class="level-item-body">
+        <span class="level-item-title">${escapeHtml(w.title)}</span>
+        ${w.description ? `<span class="level-item-desc">${escapeHtml(w.description)}</span>` : ''}
       </div>
+      <span class="level-item-arrow" aria-hidden="true">→</span>
     </div>
   `).join('');
 
-  // Toggle accordion
-  accordion.querySelectorAll('.accordion-header').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', String(!expanded));
-      const body = document.getElementById(btn.getAttribute('aria-controls'));
-      if (body) body.hidden = expanded;
-    });
-  });
-
-  // Apertura writeup via click o tastiera
-  accordion.querySelectorAll('.writeup-card').forEach(card => {
-    const open = () => openWriteup(card.dataset.file, card.dataset.title);
-    card.addEventListener('click', open);
-    card.addEventListener('keydown', e => {
+  // Apertura writeup dal livello
+  levelsEl.querySelectorAll('.level-item').forEach(item => {
+    const open = () => openWriteup(item.dataset.file, item.dataset.title);
+    item.addEventListener('click', open);
+    item.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
     });
   });
+
+  // Riavvia l'animazione del panel ad ogni apertura
+  const panel = modal.querySelector('.wargame-panel');
+  panel.style.animation = 'none';
+  panel.offsetHeight; // force reflow
+  panel.style.animation = '';
+
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeWargameModal() {
+  const modal = document.getElementById('wargame-modal');
+  if (!modal) return;
+  modal.setAttribute('aria-hidden', 'true');
+  // Ripristina scroll solo se anche il writeup modal è chiuso
+  const writeupModal = document.getElementById('writeup-modal');
+  if (!writeupModal || writeupModal.getAttribute('aria-hidden') === 'true') {
+    document.body.style.overflow = '';
+  }
 }
 
 /* ── MODAL WRITEUP ───────────────────────────────────────────────────────── */
@@ -227,18 +272,27 @@ function closeModal() {
 }
 
 function initModal() {
-  const modal    = document.getElementById('writeup-modal');
-  const closeBtn = document.querySelector('.modal-close');
-  const backdrop = document.querySelector('.modal-backdrop');
-  if (!modal) return;
-
+  // ── Writeup modal ──
+  const writeupModal = document.getElementById('writeup-modal');
+  const closeBtn     = document.querySelector('#writeup-modal .modal-close');
+  const backdrop     = document.querySelector('#writeup-modal .modal-backdrop');
   closeBtn?.addEventListener('click', closeModal);
   backdrop?.addEventListener('click', closeModal);
 
-  // Chiudi con ESC
+  // ── Wargame modal ──
+  const wargameClose    = document.getElementById('wargame-close');
+  const wargameBackdrop = document.querySelector('.wargame-backdrop');
+  wargameClose?.addEventListener('click', closeWargameModal);
+  wargameBackdrop?.addEventListener('click', closeWargameModal);
+
+  // ESC: chiude prima il writeup modal (se aperto), poi il wargame modal
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+    if (e.key !== 'Escape') return;
+    if (writeupModal?.getAttribute('aria-hidden') === 'false') {
       closeModal();
+    } else {
+      const wgModal = document.getElementById('wargame-modal');
+      if (wgModal?.getAttribute('aria-hidden') === 'false') closeWargameModal();
     }
   });
 }

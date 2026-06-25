@@ -236,8 +236,8 @@
         <h2 class="section-heading"><span class="accent mono">#</span> CTF Writeups</h2>
         <p class="section-subtitle">Documentazione tecnica dei wargame completati: per ognuno di essi è disponibile un writeup dettagliato. Ognuno spiega il ragionamento dietro ogni step, non solo i comandi utilizzati e le soluzioni, corredato di screenshots e analisi dettagliata. Per rispetto delle linee guida delle piattaforme di CTF, le flag trovate non sono state pubblicate nelle documentazioni e sono state oscurate nelle immagini di supporto alla lettura. Hypervisor: VMWare Workstation Pro; VMs: Ubuntu Linux, Parrot OS, Kali Linux, Windows 11.</p>
 
-        <div id="writeup-accordion" class="writeup-accordion" aria-live="polite">
-          <p class="writeup-loading">Caricamento writeup...</p>
+        <div id="wargame-buttons" class="wargame-buttons">
+          <!-- generato da JS in base alle categorie presenti in index.json -->
         </div>
       </div>
     </section>
@@ -276,7 +276,25 @@
     <span class="mono text-muted">$ echo "Built with HTML/CSS/JS — no frameworks"</span>
   </footer>
 
-  <!-- ══ WRITEUP MODAL ═══════════════════════════════════════════════════ -->
+  <!-- ══ WARGAME MODAL (livello 1) ══════════════════════════════════════ -->
+  <div id="wargame-modal" class="wargame-modal" aria-modal="true" role="dialog" aria-labelledby="wargame-modal-title" aria-hidden="true">
+    <div class="wargame-backdrop"></div>
+    <div class="wargame-panel">
+      <div class="wargame-toolbar">
+        <div class="wargame-toolbar-left">
+          <span class="wargame-modal-category" id="wargame-modal-category"></span>
+          <span class="wargame-modal-title" id="wargame-modal-title"></span>
+        </div>
+        <button class="modal-close" id="wargame-close" aria-label="Chiudi wargame">✕</button>
+      </div>
+      <div class="wargame-modal-body">
+        <div class="wargame-info" id="wargame-modal-info"></div>
+        <div class="wargame-levels" id="wargame-modal-levels"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WRITEUP MODAL (livello 2, sopra wargame modal) ═════════════════ -->
   <div id="writeup-modal" class="modal" aria-modal="true" role="dialog" aria-label="Writeup" aria-hidden="true">
     <div class="modal-backdrop"></div>
     <div class="modal-panel">
