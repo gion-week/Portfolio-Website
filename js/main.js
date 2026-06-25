@@ -8,70 +8,39 @@ function initTerminal() {
   const container = document.getElementById('terminal-body');
   if (!container) return;
 
-  // Sequenza da mostrare: ogni oggetto è { type: 'cmd'|'output', text }
+  const HOST = 'visitor@portfolio';
+
+  // Sequenza: si "naviga" tra file e cartelle per scoprire le informazioni.
+  //  - cmd  : comando digitato (cwd = directory mostrata nel prompt)
+  //  - out  : riga di output semplice (opz. tone: 'muted' | 'accent')
+  //  - dir  : listing di cartella (items colorati come directory)
   const sequence = [
-    { type: 'cmd',    text: 'whoami' },
-    { type: 'output', text: 'Alberto Casalicchio — IT Junior & Security Enthusiast' },
-    { type: 'cmd',    text: 'cat location.txt' },
-    { type: 'output', text: 'Orbassano (TO) - Piemonte, Italia' },
-    { type: 'cmd',    text: 'ls ./projects/' },
-    { type: 'output', text: 'bandit-writeups/   natas-writeups/   port-scanner/   Windows 10 Lab Setup/' },
-    { type: 'cmd',    text: 'echo $GOAL' },
-    { type: 'output', text: 'Cybersecurity Professional' },
+    { type: 'cmd', cwd: '~', text: 'whoami' },
+    { type: 'out', text: 'Alberto Casalicchio — IT Junior orientato alla Cybersecurity' },
+
+    { type: 'cmd', cwd: '~', text: 'cat profile.txt' },
+    { type: 'out', text: 'Perito informatico · Orbassano (TO), Italia' },
+
+    { type: 'cmd', cwd: '~', text: 'ls skills/' },
+    { type: 'dir', items: ['security/', 'networking/', 'programming/', 'systems/', 'tools/'] },
+
+    { type: 'cmd', cwd: '~/skills', text: 'cat certs.txt' },
+    { type: 'out', text: 'Google IT Support · Cisco Intro to Cybersecurity · CompTIA Security+ (in studio)' },
+
+    { type: 'cmd', cwd: '~', text: 'ls projects/' },
+    { type: 'dir', items: ['bandit-writeups/', 'natas-writeups/', 'port-scanner/', 'win10-lab/'] },
+
+    { type: 'cmd', cwd: '~', text: 'echo $GOAL' },
+    { type: 'out', text: 'Crescere come professionista della Cybersecurity', tone: 'accent' },
   ];
 
-  const CHAR_DELAY = 40;   // ms per carattere (comando)
-  const LINE_PAUSE = 500;  // ms tra comando e output
-  const STEP_PAUSE = 300;  // ms tra una riga e l'altra
-
-  // Crea e aggiunge una riga nel terminale
-  function addLine(html) {
-    const line = document.createElement('div');
-    line.className = 'terminal-line';
-    line.innerHTML = html;
-    // Inserisce prima del cursore
-    const cursor = container.querySelector('.terminal-cursor');
-    if (cursor) {
-      container.insertBefore(line, cursor);
-    } else {
-      container.appendChild(line);
-    }
-  }
-
-  // Aggiunge il cursore fisso alla fine
-  const cursorEl = document.createElement('span');
-  cursorEl.className = 'terminal-cursor';
-  container.appendChild(cursorEl);
-
-  // Scrive un comando carattere per carattere
-  function typeCommand(text, callback) {
-    const line = document.createElement('div');
-    line.className = 'terminal-line';
-    line.innerHTML = '<span class="terminal-prompt">$ </span><span class="terminal-cmd"></span>';
-    const cursor = container.querySelector('.terminal-cursor');
-    container.insertBefore(line, cursor);
-
-    const cmdSpan = line.querySelector('.terminal-cmd');
-    let i = 0;
-    function nextChar() {
-      if (i < text.length) {
-        cmdSpan.textContent += text[i++];
-        setTimeout(nextChar, CHAR_DELAY);
-      } else {
-        setTimeout(callback, LINE_PAUSE);
-      }
-    }
-    nextChar();
-  }
-
-  // Aggiunge una riga di output
-  function addOutput(text, callback) {
-    addLine('<span class="terminal-output">' + escapeHtml(text) + '</span>');
-    setTimeout(callback, STEP_PAUSE);
-  }
+  const CHAR_DELAY = 32;   // ms base per carattere digitato
+  const CHAR_JITTER = 28;  // variazione casuale per un ritmo più naturale
+  const LINE_PAUSE = 380;  // ms tra fine comando e output
+  const STEP_PAUSE = 240;  // ms tra una riga e la successiva
 
   function escapeHtml(str) {
-    return str
+    return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -79,19 +48,77 @@ function initTerminal() {
       .replace(/'/g, '&#039;');
   }
 
-  // Esegue la sequenza in ordine
-  let idx = 0;
-  function runNext() {
-    if (idx >= sequence.length) return; // animazione completata, cursore rimane
-    const step = sequence[idx++];
-    if (step.type === 'cmd') {
-      typeCommand(step.text, runNext);
-    } else {
-      addOutput(step.text, runNext);
-    }
+  function promptHtml(cwd) {
+    return '<span class="term-user">' + HOST + '</span>'
+      + '<span class="term-colon">:</span>'
+      + '<span class="term-path">' + escapeHtml(cwd) + '</span>'
+      + '<span class="term-sign">$</span> ';
   }
 
-  // Ritardo iniziale prima di partire
+  // Aggiunge una riga (output/dir) con fade-in, in fondo al terminale
+  function appendLine(html) {
+    const line = document.createElement('div');
+    line.className = 'terminal-line term-fade';
+    line.innerHTML = html;
+    container.appendChild(line);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // Digita un comando carattere per carattere dopo il prompt
+  function typeCommand(cwd, text, callback) {
+    const line = document.createElement('div');
+    line.className = 'terminal-line';
+    line.innerHTML = promptHtml(cwd) + '<span class="terminal-cmd"></span>';
+    container.appendChild(line);
+
+    const cmdSpan = line.querySelector('.terminal-cmd');
+    let i = 0;
+    function nextChar() {
+      if (i < text.length) {
+        cmdSpan.textContent += text[i++];
+        container.scrollTop = container.scrollHeight;
+        setTimeout(nextChar, CHAR_DELAY + Math.random() * CHAR_JITTER);
+      } else {
+        setTimeout(callback, LINE_PAUSE);
+      }
+    }
+    nextChar();
+  }
+
+  function addOutput(text, tone, callback) {
+    const cls = tone === 'accent' ? 'terminal-output term-accent'
+              : tone === 'muted'  ? 'terminal-output term-muted'
+              : 'terminal-output';
+    appendLine('<span class="' + cls + '">' + escapeHtml(text) + '</span>');
+    setTimeout(callback, STEP_PAUSE);
+  }
+
+  function addDir(items, callback) {
+    const inner = items
+      .map(i => '<span class="term-dir">' + escapeHtml(i) + '</span>')
+      .join('');
+    appendLine('<span class="term-listing">' + inner + '</span>');
+    setTimeout(callback, STEP_PAUSE);
+  }
+
+  // Riga finale: prompt "pronto" con cursore lampeggiante
+  function addFinalPrompt() {
+    const line = document.createElement('div');
+    line.className = 'terminal-line term-fade';
+    line.innerHTML = promptHtml('~') + '<span class="terminal-cursor"></span>';
+    container.appendChild(line);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  let idx = 0;
+  function runNext() {
+    if (idx >= sequence.length) { addFinalPrompt(); return; }
+    const step = sequence[idx++];
+    if (step.type === 'cmd')      typeCommand(step.cwd, step.text, runNext);
+    else if (step.type === 'dir') addDir(step.items, runNext);
+    else                          addOutput(step.text, step.tone, runNext);
+  }
+
   setTimeout(runNext, 400);
 }
 
@@ -187,7 +214,6 @@ function openWargameModal(category) {
         <span class="level-item-title">${escapeHtml(w.title)}</span>
         ${w.description ? `<span class="level-item-desc">${escapeHtml(w.description)}</span>` : ''}
       </div>
-      <span class="level-item-arrow" aria-hidden="true">→</span>
     </div>
   `).join('');
 
