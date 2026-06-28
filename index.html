@@ -64,7 +64,7 @@
             </li>
             <li>
               <span class="hero-status-name">Port scanner Python</span>
-              <span class="hero-status-badge is-wip">in sviluppo</span>
+              <span class="hero-status-badge is-done">completo</span>
             </li>
             <li>
               <span class="hero-status-name">Home lab Windows 10 / AD</span>
@@ -228,12 +228,19 @@
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
               </a>
             </div>
-            <p class="project-desc">Port scanner scritto in Python 3 con socket TCP, banner grabbing e output strutturato.</p>
+            <p class="project-desc">Scanner TCP scritto interamente in Python puro (solo standard library, senza dipendere da nmap o altri tool di sistema). Esegue una scansione parallela tramite ThreadPoolExecutor, supporta range CIDR e specifica flessibile delle porte (singole, liste, range), e identifica i servizi attivi con banner grabbing e probe specifiche per protocollo. L'output è disponibile in testo colorato o JSON. Il progetto include una suite di test unitari con pytest e 5 scansioni reali documentate con analisi dei risultati.</p>
             <div class="project-tags">
               <span class="tag">Python 3</span>
+              <span class="tag">Socket TCP/IP</span>
               <span class="tag">Networking</span>
               <span class="tag">Port Scanning</span>
-              <span class="tag tag--wip">In corso</span>
+              <span class="tag">Service Enumeration</span>
+              <span class="tag">Banner Grabbing</span>
+              <span class="tag">Concorrenza / Threading</span>
+              <span class="tag">CLI / argparse</span>
+              <span class="tag">JSON</span>
+              <span class="tag">pytest</span>
+              <span class="tag tag--done">completo</span>
             </div>
           </article>
 
