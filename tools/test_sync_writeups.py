@@ -84,5 +84,49 @@ class TestBuildEntry(unittest.TestCase):
             sw.build_entry("natas", "11", "nessun titolo qui", None)
 
 
+def _make_writeups_tree(root, files):
+    # files: dict {(category, level): md_text}
+    for (cat, lvl), text in files.items():
+        d = root / cat
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"level-{lvl}.md").write_text(text, encoding="utf-8")
+
+
+class TestRegenerateIndex(unittest.TestCase):
+    def test_orders_by_category_then_level(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _make_writeups_tree(root, {
+                ("natas", "01"): "# Natas Level 1 → 2\n",
+                ("bandit", "02"): "# Bandit Level 2 → 3\n",
+                ("bandit", "00"): "# Bandit Level 0 → 1\n",
+            })
+            existing = {
+                "natas-01": "d-n1", "bandit-02": "d-b2", "bandit-00": "d-b0",
+            }
+            entries = sw.regenerate_index(root, existing)
+            self.assertEqual([e["id"] for e in entries],
+                             ["bandit-00", "bandit-02", "natas-01"])
+
+    def test_new_level_uses_comment_description(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _make_writeups_tree(root, {
+                ("natas", "11"): "<!-- portfolio-desc: XOR -->\n# Natas Level 11 → 12\n",
+            })
+            entries = sw.regenerate_index(root, {})
+            self.assertEqual(entries[0]["description"], "XOR")
+
+    def test_missing_description_raises_with_ids(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _make_writeups_tree(root, {
+                ("natas", "12"): "# Natas Level 12 → 13\n",  # no comment, no existing
+            })
+            with self.assertRaises(sw.MissingDescription) as ctx:
+                sw.regenerate_index(root, {})
+            self.assertEqual(ctx.exception.ids, ["natas-12"])
+
+
 if __name__ == "__main__":
     unittest.main()

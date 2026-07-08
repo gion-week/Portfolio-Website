@@ -61,3 +61,41 @@ def build_entry(category, level, md_text, existing_desc):
         "description": desc,
         "file": f"writeups/{category}/level-{level}.md",
     }
+
+
+class MissingDescription(Exception):
+    """Sollevata quando uno o piu livelli NUOVI non hanno una description."""
+
+    def __init__(self, ids):
+        self.ids = ids
+        super().__init__(f"Description mancante per: {', '.join(ids)}")
+
+
+def _category_sort_key(entry):
+    cat = entry["category"]
+    idx = CATEGORY_ORDER.index(cat) if cat in CATEGORY_ORDER else len(CATEGORY_ORDER)
+    return (idx, cat, int(entry["level"]))
+
+
+def discover_entries(writeups_dir, existing_desc_map):
+    entries = []
+    for cat_dir in sorted(p for p in writeups_dir.iterdir() if p.is_dir()):
+        category = cat_dir.name
+        for md_path in cat_dir.glob("level-*.md"):
+            m = LEVEL_MD_RE.match(md_path.name)
+            if not m:
+                continue
+            level = m.group(1)
+            md_text = md_path.read_text(encoding="utf-8")
+            existing = existing_desc_map.get(f"{category}-{level}")
+            entries.append(build_entry(category, level, md_text, existing))
+    return entries
+
+
+def regenerate_index(writeups_dir, existing_desc_map):
+    entries = discover_entries(writeups_dir, existing_desc_map)
+    entries.sort(key=_category_sort_key)
+    missing = [e["id"] for e in entries if e["description"] is None]
+    if missing:
+        raise MissingDescription(missing)
+    return entries
