@@ -44,3 +44,20 @@ def load_existing_descriptions(index_path):
         return {}
     data = json.loads(index_path.read_text(encoding="utf-8"))
     return {entry["id"]: entry["description"] for entry in data}
+
+
+def build_entry(category, level, md_text, existing_desc):
+    title = parse_title(md_text)
+    if title is None:
+        raise ValueError(f"{category}-{level}: H1 '# Titolo' mancante nel README")
+    desc = parse_desc(md_text)
+    if desc is None:
+        desc = existing_desc  # puo restare None -> validato a valle
+    return {
+        "id": f"{category}-{level}",
+        "title": title,
+        "category": category,
+        "level": level,
+        "description": desc,
+        "file": f"writeups/{category}/level-{level}.md",
+    }

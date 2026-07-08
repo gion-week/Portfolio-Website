@@ -50,5 +50,39 @@ class TestLoadExisting(unittest.TestCase):
         self.assertEqual(got, {})
 
 
+class TestBuildEntry(unittest.TestCase):
+    def test_description_from_comment_wins(self):
+        md = "<!-- portfolio-desc: Dal commento -->\n# Natas Level 11 → 12\n"
+        e = sw.build_entry("natas", "11", md, "vecchia")
+        self.assertEqual(e, {
+            "id": "natas-11",
+            "title": "Natas Level 11 → 12",
+            "category": "natas",
+            "level": "11",
+            "description": "Dal commento",
+            "file": "writeups/natas/level-11.md",
+        })
+
+    def test_falls_back_to_existing_when_no_comment(self):
+        md = "# Bandit Level 0 → 1\n\ntesto"
+        e = sw.build_entry("bandit", "00", md, "Connessione SSH.")
+        self.assertEqual(e["description"], "Connessione SSH.")
+
+    def test_description_none_when_no_comment_no_existing(self):
+        md = "# Natas Level 12 → 13\n"
+        e = sw.build_entry("natas", "12", md, None)
+        self.assertIsNone(e["description"])
+
+    def test_key_order_matches_index_json(self):
+        md = "<!-- portfolio-desc: x -->\n# T\n"
+        e = sw.build_entry("natas", "11", md, None)
+        self.assertEqual(list(e.keys()),
+                         ["id", "title", "category", "level", "description", "file"])
+
+    def test_missing_h1_raises(self):
+        with self.assertRaises(ValueError):
+            sw.build_entry("natas", "11", "nessun titolo qui", None)
+
+
 if __name__ == "__main__":
     unittest.main()
