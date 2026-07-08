@@ -5,6 +5,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import sync_writeups as sw
 
+import json
+import tempfile
+
 
 class TestParsers(unittest.TestCase):
     def test_parse_title_extracts_h1(self):
@@ -26,6 +29,25 @@ class TestParsers(unittest.TestCase):
     def test_parse_desc_absent_returns_none(self):
         md = "# T\n\ntesto senza commento"
         self.assertIsNone(sw.parse_desc(md))
+
+
+class TestLoadExisting(unittest.TestCase):
+    def test_returns_id_to_description_map(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "index.json"
+            p.write_text(json.dumps([
+                {"id": "natas-00", "description": "Ispezione sorgente HTML."},
+                {"id": "bandit-00", "description": "Connessione SSH."},
+            ]), encoding="utf-8")
+            got = sw.load_existing_descriptions(p)
+            self.assertEqual(got, {
+                "natas-00": "Ispezione sorgente HTML.",
+                "bandit-00": "Connessione SSH.",
+            })
+
+    def test_missing_file_returns_empty(self):
+        got = sw.load_existing_descriptions(Path("/nope/index.json"))
+        self.assertEqual(got, {})
 
 
 if __name__ == "__main__":

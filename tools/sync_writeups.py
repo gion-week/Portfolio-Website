@@ -37,3 +37,10 @@ def parse_title(md_text):
 def parse_desc(md_text):
     m = DESC_RE.search(md_text)
     return m.group(1).strip() if m else None
+
+
+def load_existing_descriptions(index_path):
+    if not index_path.exists():
+        return {}
+    data = json.loads(index_path.read_text(encoding="utf-8"))
+    return {entry["id"]: entry["description"] for entry in data}
