@@ -99,3 +99,30 @@ def regenerate_index(writeups_dir, existing_desc_map):
     if missing:
         raise MissingDescription(missing)
     return entries
+
+
+def sync_source(repo_path, category, writeups_dir, base_dir):
+    src_root = (base_dir / repo_path).resolve()
+    if not src_root.is_dir():
+        raise FileNotFoundError(f"Repo sorgente non trovato: {src_root}")
+    target_md_dir = writeups_dir / category
+    target_ss_dir = target_md_dir / "screenshots"
+    target_md_dir.mkdir(parents=True, exist_ok=True)
+    target_ss_dir.mkdir(parents=True, exist_ok=True)
+    synced = []
+    for level_dir in sorted(src_root.glob("level-*")):
+        m = LEVEL_DIR_RE.match(level_dir.name)
+        if not (level_dir.is_dir() and m):
+            continue
+        readme = level_dir / "README.md"
+        if not readme.exists():
+            continue  # cartella di scaffolding vuota
+        level = m.group(1)
+        shutil.copyfile(readme, target_md_dir / f"level-{level}.md")
+        ss_dir = level_dir / "screenshots"
+        if ss_dir.is_dir():
+            for img in ss_dir.iterdir():
+                if img.is_file() and img.name != ".gitkeep":
+                    shutil.copyfile(img, target_ss_dir / img.name)
+        synced.append(f"{category}-{level}")
+    return synced

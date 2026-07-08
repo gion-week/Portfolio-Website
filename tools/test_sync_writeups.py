@@ -128,5 +128,41 @@ class TestRegenerateIndex(unittest.TestCase):
             self.assertEqual(ctx.exception.ids, ["natas-12"])
 
 
+class TestSyncSource(unittest.TestCase):
+    def _make_source(self, root):
+        # level con README + screenshot
+        l11 = root / "level-11"
+        (l11 / "screenshots").mkdir(parents=True)
+        (l11 / "README.md").write_text("# Natas Level 11 → 12\n", encoding="utf-8")
+        (l11 / "screenshots" / "11-a.png").write_bytes(b"\x89PNG")
+        (l11 / "screenshots" / ".gitkeep").write_text("", encoding="utf-8")
+        # cartella di scaffolding vuota (senza README)
+        (root / "level-12" / "screenshots").mkdir(parents=True)
+        (root / "level-12" / "screenshots" / ".gitkeep").write_text("", encoding="utf-8")
+
+    def test_copies_readme_and_screenshots_skips_scaffolding(self):
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            src = base / "natas-overthewire"
+            src.mkdir()
+            self._make_source(src)
+            writeups = base / "portfolio" / "writeups"
+            writeups.mkdir(parents=True)
+            synced = sw.sync_source("../natas-overthewire", "natas",
+                                    writeups, base / "portfolio")
+            self.assertEqual(synced, ["natas-11"])
+            self.assertTrue((writeups / "natas" / "level-11.md").exists())
+            self.assertTrue((writeups / "natas" / "screenshots" / "11-a.png").exists())
+            # .gitkeep NON copiata
+            self.assertFalse((writeups / "natas" / "screenshots" / ".gitkeep").exists())
+            # scaffolding senza README NON copiata
+            self.assertFalse((writeups / "natas" / "level-12.md").exists())
+
+    def test_missing_repo_raises(self):
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(FileNotFoundError):
+                sw.sync_source("../nope", "natas", Path(d), Path(d))
+
+
 if __name__ == "__main__":
     unittest.main()
