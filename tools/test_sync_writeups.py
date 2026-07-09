@@ -202,6 +202,9 @@ class TestRun(unittest.TestCase):
             # formato: accenti UTF-8 non-escaped, indent 2, newline finale
             self.assertIn("→", content)
             self.assertTrue(content.endswith("]\n"))
+            # newline LF-only anche sui byte grezzi (no CRLF su Windows)
+            raw_bytes = (writeups / "index.json").read_bytes()
+            self.assertNotIn(b"\r", raw_bytes)
             # idempotenza: secondo run -> stesso contenuto
             sw.run(sources, writeups, writeups / "index.json", base / "portfolio")
             self.assertEqual((writeups / "index.json").read_text(encoding="utf-8"),

@@ -138,6 +138,7 @@ def run(sources, writeups_dir, index_path, base_dir):
     index_path.write_text(
         json.dumps(entries, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     print(f"[index] {len(entries)} voci -> {index_path}")
     return entries
