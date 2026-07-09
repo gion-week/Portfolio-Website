@@ -9,9 +9,10 @@ index.html          # entrypoint unico
 css/style.css       # tutto lo stile del sito
 js/main.js          # logica del sito (animazioni, caricamento writeups)
 js/marked.umd.js    # libreria per render Markdown — NON modificare
+tools/sync_writeups.py  # genera index.json e sincronizza i writeup dai repo sorgente
 assets/             # immagini/risorse generali del sito
 writeups/
-  index.json        # indice dei writeups (aggiornare quando si aggiunge un livello)
+  index.json        # indice dei writeups (generato — NON editare a mano)
   bandit/           # writeup Bandit OverTheWire (level-00.md … level-32.md)
   bandit/screenshots/
   natas/            # writeup Natas OverTheWire (level-00.md … level-10.md)
@@ -36,9 +37,12 @@ writeups/
   in base alle categorie di `writeups/index.json`) → modal con header centrato
   (categoria + nome wargame) e lista di livelli come card centrate → click su un
   livello che apre il writeup in un secondo modal.
-- Aggiungere un nuovo wargame/livello significa SOLO aggiungere le voci in
-  `writeups/index.json` (e la descrizione in `WARGAME_INFO` dentro `js/main.js`
-  per i nuovi wargame): NON creare layout, modal o stili alternativi.
+- Aggiungere un nuovo livello NON si fa editando `index.json` a mano:
+  `index.json` è generato da `tools/sync_writeups.py`, che scandisce
+  `writeups/` e ricava `title` dall'H1 e `description` dal commento
+  `<!-- portfolio-desc: ... -->` in cima al README. Per un nuovo wargame
+  resta necessario aggiungere la voce in `WARGAME_INFO` dentro `js/main.js`
+  e una entry in `SOURCES` dentro `tools/sync_writeups.py`.
 - Le classi/stili coinvolti (`.wargame-modal`, `.wargame-toolbar`,
   `.wargame-modal-category`, `.wargame-modal-title`, `.wargame-levels`,
   `.level-item*`) sono condivisi da tutti i wargame: modificarli cambia l'aspetto
@@ -63,6 +67,13 @@ del progetto; applicarli a qualsiasi nuovo componente o sezione.
   se serve un colore ricorrente, definirlo come token.
 - **Motion**: mantenere il blocco `prefers-reduced-motion`. Animare solo
   `transform`/`opacity`; niente animazioni su proprietà di layout.
+
+## Pubblicare un livello (workflow sync)
+1. Autorare `level-XX/README.md` (+ screenshot) nel repo sorgente del wargame,
+   con in cima la riga `<!-- portfolio-desc: frase breve -->`.
+2. Nel repo portfolio: `python tools/sync_writeups.py`.
+3. `git add` + commit + push. Vercel deploya in automatico.
+Lo script è un tool di authoring locale: non è un build step Vercel e non fa git.
 
 ## Cosa NON fare
 - Non aggiungere package.json, node_modules o build pipeline
