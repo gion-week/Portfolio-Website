@@ -350,5 +350,13 @@
     "level": "10",
     "description": "Command injection con filtro su caratteri speciali.",
     "file": "writeups/natas/level-10.md"
+  },
+  {
+    "id": "natas-11",
+    "title": "Natas Level 11 → 12",
+    "category": "natas",
+    "level": "11",
+    "description": "Cifrario XOR a chiave ripetuta e known-plaintext attack per forgiare il cookie di sessione.",
+    "file": "writeups/natas/level-11.md"
   }
 ]
