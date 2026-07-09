@@ -126,3 +126,40 @@ def sync_source(repo_path, category, writeups_dir, base_dir):
                     shutil.copyfile(img, target_ss_dir / img.name)
         synced.append(f"{category}-{level}")
     return synced
+
+
+def run(sources, writeups_dir, index_path, base_dir):
+    for source in sources:
+        synced = sync_source(source["repo_path"], source["category"],
+                             writeups_dir, base_dir)
+        print(f"[sync] {source['category']}: {len(synced)} livelli {synced}")
+    existing = load_existing_descriptions(index_path)
+    entries = regenerate_index(writeups_dir, existing)
+    index_path.write_text(
+        json.dumps(entries, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"[index] {len(entries)} voci -> {index_path}")
+    return entries
+
+
+def main(argv=None):
+    try:
+        run(SOURCES, WRITEUPS_DIR, INDEX_PATH, REPO_ROOT)
+    except MissingDescription as e:
+        print(
+            "ERRORE: livelli nuovi senza description (manca il commento "
+            "'<!-- portfolio-desc: ... -->' e non esiste una voce pregressa):",
+            file=sys.stderr,
+        )
+        for entry_id in e.ids:
+            print(f"  - {entry_id}", file=sys.stderr)
+        return 1
+    except FileNotFoundError as e:
+        print(f"ERRORE: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

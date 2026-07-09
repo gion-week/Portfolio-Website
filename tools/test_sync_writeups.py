@@ -164,5 +164,63 @@ class TestSyncSource(unittest.TestCase):
                 sw.sync_source("../nope", "natas", Path(d), Path(d))
 
 
+class TestRun(unittest.TestCase):
+    def _setup(self, base):
+        src = base / "natas-overthewire"
+        (src / "level-11" / "screenshots").mkdir(parents=True)
+        (src / "level-11" / "README.md").write_text(
+            "<!-- portfolio-desc: Cifrario XOR e known-plaintext -->\n"
+            "# Natas Level 11 → 12\n", encoding="utf-8")
+        (src / "level-11" / "screenshots" / "11-a.png").write_bytes(b"\x89PNG")
+        writeups = base / "portfolio" / "writeups"
+        (writeups / "natas").mkdir(parents=True)
+        # indice preesistente con una voce natas gia pubblicata
+        (writeups / "index.json").write_text(json.dumps([
+            {"id": "natas-10", "title": "Natas Level 10 → 11", "category": "natas",
+             "level": "10", "description": "Command injection con filtro.",
+             "file": "writeups/natas/level-10.md"},
+        ], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        # il .md natas-10 deve esistere per essere ridiscoperto
+        (writeups / "natas" / "level-10.md").write_text(
+            "# Natas Level 10 → 11\n", encoding="utf-8")
+        return writeups
+
+    def test_run_writes_index_with_exact_format(self):
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            writeups = self._setup(base)
+            sources = [{"category": "natas", "repo_path": "../natas-overthewire"}]
+            sw.run(sources, writeups, writeups / "index.json", base / "portfolio")
+            content = (writeups / "index.json").read_text(encoding="utf-8")
+            data = json.loads(content)
+            ids = [e["id"] for e in data]
+            self.assertEqual(ids, ["natas-10", "natas-11"])
+            # natas-10 description preservata
+            self.assertEqual(data[0]["description"], "Command injection con filtro.")
+            # natas-11 description dal commento
+            self.assertEqual(data[1]["description"], "Cifrario XOR e known-plaintext")
+            # formato: accenti UTF-8 non-escaped, indent 2, newline finale
+            self.assertIn("→", content)
+            self.assertTrue(content.endswith("]\n"))
+            # idempotenza: secondo run -> stesso contenuto
+            sw.run(sources, writeups, writeups / "index.json", base / "portfolio")
+            self.assertEqual((writeups / "index.json").read_text(encoding="utf-8"),
+                             content)
+
+    def test_run_raises_missing_description_for_new_level(self):
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            src = base / "natas-overthewire"
+            (src / "level-12" / "screenshots").mkdir(parents=True)
+            (src / "level-12" / "README.md").write_text(
+                "# Natas Level 12 → 13\n", encoding="utf-8")  # no comment
+            writeups = base / "portfolio" / "writeups"
+            (writeups / "natas").mkdir(parents=True)
+            (writeups / "index.json").write_text("[]\n", encoding="utf-8")
+            sources = [{"category": "natas", "repo_path": "../natas-overthewire"}]
+            with self.assertRaises(sw.MissingDescription):
+                sw.run(sources, writeups, writeups / "index.json", base / "portfolio")
+
+
 if __name__ == "__main__":
     unittest.main()
