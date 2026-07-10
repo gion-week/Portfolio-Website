@@ -1,0 +1,13 @@
+# Python (bytecode del tool di authoring)
+__pycache__/
+*.py[cod]
+
+# Claude Code — impostazioni locali/personali (non condivise)
+.claude/settings.local.json
+
+# Superpowers — scratch di lavoro (spec/piano vivono in docs/)
+.superpowers/
+
+# OS
+.DS_Store
+Thumbs.db
