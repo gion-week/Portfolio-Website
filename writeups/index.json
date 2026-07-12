@@ -358,5 +358,21 @@
     "level": "11",
     "description": "Cifrario XOR a chiave ripetuta e known-plaintext attack per forgiare il cookie di sessione.",
     "file": "writeups/natas/level-11.md"
+  },
+  {
+    "id": "natas-12",
+    "title": "Natas Level 12 → 13",
+    "category": "natas",
+    "level": "12",
+    "description": "Upload di file con controllo debole su nome ed estensione: esecuzione di codice PHP sul server.",
+    "file": "writeups/natas/level-12.md"
+  },
+  {
+    "id": "natas-13",
+    "title": "Natas Level 13 → 14",
+    "category": "natas",
+    "level": "13",
+    "description": "Bypass del controllo sul contenuto del file in un upload per l'esecuzione di codice PHP.",
+    "file": "writeups/natas/level-13.md"
   }
 ]
