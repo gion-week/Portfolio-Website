@@ -239,6 +239,9 @@ ul[role="list"] {
   align-items: center;
 }
 
+/* Bio prima del terminale: il pitch guida la lettura (sinistra su desktop, in alto su mobile) */
+.hero-bio { order: -1; }
+
 /* Terminal window */
 .terminal-window {
   background: var(--bg-2);
@@ -1119,6 +1122,8 @@ ul[role="list"] {
     padding: var(--space-8) var(--space-6);
   }
   .hero-name { font-size: 1.6rem; }
+  /* Terminale secondario su mobile: piu compatto sotto la bio */
+  .terminal-body { min-height: 240px; font-size: 0.72rem; padding: var(--space-4) var(--space-5); }
 
   .page-section { padding: var(--space-16) 0; }
 
