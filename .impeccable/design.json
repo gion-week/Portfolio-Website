@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-12",
+  "title": "Design System: Portfolio — Alberto Casalicchio",
+  "extensions": {
+    "colorMeta": {
+      "signal-teal": {
+        "role": "primary",
+        "displayName": "Signal Teal",
+        "canonical": "#2dd4bf",
+        "tonalRamp": ["#07211d", "#0c3b34", "#12564c", "#1a8577", "#2dd4bf", "#5eead4", "#99f2e4", "#ccf9f1"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#e8f0f5",
+        "tonalRamp": ["#0a0f14", "#141d26", "#243441", "#35495a", "#55697a", "#8090a0", "#b3c0cc", "#e8f0f5"]
+      },
+      "bg-void": {
+        "role": "neutral",
+        "displayName": "Void",
+        "canonical": "#0a0f14",
+        "tonalRamp": ["#0a0f14", "#0f161d", "#141d26", "#1c2731", "#243441", "#35495a", "#55697a", "#8090a0"]
+      },
+      "state-done": {
+        "role": "tertiary",
+        "displayName": "State Done",
+        "canonical": "#3fb950",
+        "tonalRamp": ["#0d2812", "#14421d", "#1d6b2e", "#2b8f40", "#3fb950", "#62c96f", "#8dda95", "#bfeac4"]
+      },
+      "state-wip": {
+        "role": "tertiary",
+        "displayName": "State WIP",
+        "canonical": "#d8a657",
+        "tonalRamp": ["#3a2c12", "#5c451c", "#8a6828", "#b78a3a", "#d8a657", "#e3bd7f", "#edd3a8", "#f5e6cd"]
+      },
+      "state-alert": {
+        "role": "tertiary",
+        "displayName": "State Alert",
+        "canonical": "#f0596b",
+        "tonalRamp": ["#3d1219", "#611c28", "#952b3d", "#c53a52", "#f0596b", "#f4808d", "#f8aab2", "#fbd0d6"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Nome nell'hero. Unico uso del sans in grande." },
+      "headline": { "displayName": "Headline", "purpose": "Titolo del wargame nella modal (monospace)." },
+      "title": { "displayName": "Title", "purpose": "Heading di sezione (monospace)." },
+      "body": { "displayName": "Body", "purpose": "Testo di lettura (sans), colonne 65-75ch." },
+      "label": { "displayName": "Label", "purpose": "Nav, tag, categorie, numeri livello: monospace tracked." }
+    },
+    "shadows": [
+      { "name": "hover-lift", "value": "0 10px 30px -16px rgba(45,212,191,0.30)", "purpose": "Card/level-item/contact in hover, con translateY(-2px)." },
+      { "name": "button-glow", "value": "0 6px 20px -6px rgba(45,212,191,0.30)", "purpose": "Stato hover dei bottoni." },
+      { "name": "terminal", "value": "0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(45,212,191,0.08)", "purpose": "Finestra terminale dell'hero: profonda, con anello teal impercettibile." },
+      { "name": "modal", "value": "0 32px 80px rgba(0,0,0,0.6)", "purpose": "Wargame-panel e modal-panel dei writeup." }
+    ],
+    "motion": [
+      { "name": "transition-base", "value": "150ms ease", "purpose": "Transizione di default per stati (colore, bordo, transform)." },
+      { "name": "panel-in", "value": "280ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Entrata della modal: scale+translateY con ease-out-expo." },
+      { "name": "term-line-in", "value": "240ms ease", "purpose": "Comparsa fluida delle righe del terminale." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "480px" },
+      { "name": "tablet", "value": "768px" },
+      { "name": "wide", "value": "1180px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "CTA principale: teal pieno, monospace, angoli 4px.",
+      "html": "<button class=\"ds-btn-primary\">Contattami</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: var(--radius-sm); background: var(--accent); color: var(--on-accent); border: 1px solid var(--accent); cursor: pointer; transition: background 150ms ease, box-shadow 150ms ease; } .ds-btn-primary:hover { background: #5eead4; border-color: #5eead4; box-shadow: 0 0 0 1px var(--accent), 0 6px 20px -6px var(--accent-glow); } .ds-btn-primary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Azione secondaria: trasparente con bordo, reagisce al teal in hover.",
+      "html": "<button class=\"ds-btn-outline\">Vedi i writeup</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.875rem; font-weight: 500; padding: 8px 16px; border-radius: var(--radius-sm); background: transparent; color: var(--text-0); border: 1px solid var(--border-light); cursor: pointer; transition: color 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease; } .ds-btn-outline:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); box-shadow: 0 4px 18px -8px var(--accent-glow); } .ds-btn-outline:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Card di progetto: piatta a riposo, bordo teal + lift in hover.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Port scanner</h3><p class=\"ds-card-desc\">Scanner TCP multithread in Python con output strutturato.</p></article>",
+      "css": ".ds-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease; } .ds-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 12px 34px -16px var(--accent-glow); } .ds-card-title { font-size: 1rem; font-weight: 600; color: var(--text-0); line-height: 1.4; margin: 0 0 8px; } .ds-card-desc { font-size: 0.875rem; color: var(--text-1); margin: 0; }"
+    },
+    {
+      "name": "Status Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Tag di stato monospace; varianti done/wip con tint del colore di stato.",
+      "html": "<span class=\"ds-tag ds-tag-done\">completo</span>",
+      "css": ".ds-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.68rem; padding: 1px 6px; border-radius: var(--radius-sm); background: var(--bg-3); color: var(--text-1); border: 1px solid var(--border); white-space: nowrap; } .ds-tag-done { background: rgba(63,185,80,0.12); color: var(--green); border-color: rgba(63,185,80,0.3); }"
+    },
+    {
+      "name": "Level Item",
+      "kind": "custom",
+      "refersTo": "level-item",
+      "description": "Unità della lista livelli dei writeup: pillola-numero teal, titolo, descrizione. Centrata.",
+      "html": "<button class=\"ds-level\"><span class=\"ds-level-num\">Level 11</span><span class=\"ds-level-title\">Natas Level 11 &rarr; 12</span><span class=\"ds-level-desc\">Cifrario XOR a chiave ripetuta e known-plaintext attack.</span></button>",
+      "css": ".ds-level { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; width: 100%; padding: 24px 32px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease; } .ds-level:hover { background: var(--bg-3); border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 10px 30px -16px var(--accent-glow); } .ds-level:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-level-num { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(45,212,191,0.25); border-radius: 999px; padding: 4px 14px; } .ds-level-title { font-size: 1.05rem; font-weight: 600; color: var(--text-0); } .ds-level-desc { font-size: 0.85rem; color: var(--text-1); max-width: 480px; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Link di navigazione monospace: ink-muted, bordo inferiore teal in hover/active.",
+      "html": "<a class=\"ds-nav-link\" href=\"#writeups\">Writeups</a>",
+      "css": ".ds-nav-link { font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--text-1); padding: 4px 0; border-bottom: 2px solid transparent; text-decoration: none; transition: color 150ms ease, border-color 150ms ease; } .ds-nav-link:hover, .ds-nav-link.active { color: var(--text-0); border-bottom-color: var(--accent); } .ds-nav-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Il Terminale dell'Operatore",
+    "overview": "Il sistema è la workstation di un professionista della security, non la sua caricatura. Fondo quasi-nero blu-profondo, superfici piatte e ordinate, un solo colore acceso — un teal-segnale — che indica ciò che conta: stato, focus, interazione. La monospace marca le superfici di sistema (navigazione, label, terminale, codice), il sans porta la lettura. La competenza si legge dall'ordine, non dagli effetti. Il tono nasce da PRODUCT.md: prove non promesse, tecnico e credibile ma mai caricaturale.",
+    "keyCharacteristics": [
+      "Dark proprio (blu-profondo #0a0f14), non il grigio-GitHub di default.",
+      "Un unico accento — Signal Teal #2dd4bf — speso con parsimonia.",
+      "Monospace per il sistema, sans per la lettura.",
+      "Piatto a riposo; la profondità è una risposta all'interazione.",
+      "Accessibilità WCAG 2.1 AA come vincolo permanente."
+    ],
+    "rules": [
+      { "name": "The One-Signal Rule", "body": "Il teal è segnale, non superficie. Se copre più di una frazione minima di una schermata, non è più un segnale: è rumore.", "section": "colors" },
+      { "name": "The Signal-Not-Costume Rule", "body": "Il verde è uno stato (#3fb950), mai un verde-Matrix; il teal è diagnostico, non neon. Il colore comunica competenza, non genere.", "section": "colors" },
+      { "name": "The Mono-for-System Rule", "body": "La monospace marca le superfici di sistema (nav, terminale, label, codice), non la prosa. Il corpo resta sans per leggibilità.", "section": "typography" },
+      { "name": "The Flat-Until-Touched Rule", "body": "Le superfici sono piatte a riposo. L'ombra compare come risposta a hover/focus ed è tinta di teal, mai grigia.", "section": "elevation" },
+      { "name": "The 1px-Border Rule", "body": "I container usano un bordo pieno 1px (+ eventuale tint di sfondo). Le side-stripe colorate > 1px sono vietate.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usare Signal Teal #2dd4bf come unico accento, con parsimonia, su ciò che è segnale.",
+      "Do contornare i container con un bordo pieno 1px (+ eventuale tint di sfondo).",
+      "Do usare la monospace per le superfici di sistema e il sans per la lettura.",
+      "Do tenere il testo di lettura sopra la soglia di contrasto: normale >=4.5:1, Ink Subtle non sotto #848d97.",
+      "Do garantire target >=44x44px e un focus-visible teal (outline 2px, offset 2px).",
+      "Do far comparire l'ombra come risposta a hover/focus, tinta di teal.",
+      "Do mantenere prefers-reduced-motion e animare solo transform/opacity."
+    ],
+    "donts": [
+      "Don't ricadere nel portfolio-template da bootcamp: card identiche ripetute, hero-metric, stock photo, struttura anonima.",
+      "Don't scivolare nell'estetica hacker caricaturale: verde-Matrix, teschi, font l33t, ammiccamenti da film.",
+      "Don't usare border-left/border-right colorato > 1px come accento decorativo.",
+      "Don't usare testo in gradiente o glassmorphism decorativo.",
+      "Don't animare proprietà di layout; niente parallax/effetti che distraggono.",
+      "Don't scurire il testo di lettura sotto la soglia di contrasto per eleganza.",
+      "Don't spargere il teal come riempimento: se metà schermata è teal, non è più un segnale."
+    ]
+  }
+}

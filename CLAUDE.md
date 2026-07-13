@@ -4,6 +4,14 @@
 Sito portfolio personale statico (HTML/CSS/JS vanilla, nessun framework).
 Deployment su Vercel. Funge da curriculum e da raccolta di CTF writeups.
 
+## Design Context (Impeccable)
+Il contesto strategico di design è in `PRODUCT.md` (register: brand; pubblico primario:
+recruiter/HR per primo impiego; obiettivo: ottenere colloqui). Il sistema visivo è
+descritto in `DESIGN.md`. Principi guida: prove non promesse; due livelli di lettura
+(colpo d'occhio per il recruiter, profondità per chi verifica); tecnico e credibile ma
+mai caricaturale; distinguibilità (non un template generico); accessibilità WCAG 2.1 AA
+per default. Consultare `PRODUCT.md`/`DESIGN.md` prima di modifiche a impatto visivo.
+
 ## Struttura
 index.html          # entrypoint unico
 css/style.css       # tutto lo stile del sito
