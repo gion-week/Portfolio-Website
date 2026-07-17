@@ -374,5 +374,21 @@
     "level": "13",
     "description": "Bypass del controllo sul contenuto del file in un upload per l'esecuzione di codice PHP.",
     "file": "writeups/natas/level-13.md"
+  },
+  {
+    "id": "natas-14",
+    "title": "Natas Level 14 → 15",
+    "category": "natas",
+    "level": "14",
+    "description": "SQL injection nel form di login per bypassare l'autenticazione senza credenziali valide.",
+    "file": "writeups/natas/level-14.md"
+  },
+  {
+    "id": "natas-15",
+    "title": "Natas Level 15 → 16",
+    "category": "natas",
+    "level": "15",
+    "description": "Blind SQL injection booleana per estrarre byte a byte la password di un altro utente.",
+    "file": "writeups/natas/level-15.md"
   }
 ]
