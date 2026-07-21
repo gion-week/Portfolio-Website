@@ -390,5 +390,13 @@
     "level": "15",
     "description": "Blind SQL injection booleana per estrarre byte a byte la password di un altro utente.",
     "file": "writeups/natas/level-15.md"
+  },
+  {
+    "id": "natas-16",
+    "title": "Natas Level 16 → 17",
+    "category": "natas",
+    "level": "16",
+    "description": "Blind OS command injection sotto blacklist: bypass con command substitution e oracolo booleano su grep.",
+    "file": "writeups/natas/level-16.md"
   }
 ]
