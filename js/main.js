@@ -28,7 +28,7 @@ function initTerminal() {
     { type: 'out', text: 'Google IT Support · Cisco Intro to Cybersecurity · CompTIA Security+ (in studio)' },
 
     { type: 'cmd', cwd: '~', text: 'ls projects/' },
-    { type: 'dir', items: ['bandit-writeups/', 'natas-writeups/', 'port-scanner/', 'win10-lab/'] },
+    { type: 'dir', items: ['security-toolkit/', 'bandit-writeups/', 'natas-writeups/', 'port-scanner/', 'win10-lab/'] },
 
     { type: 'cmd', cwd: '~', text: 'echo $GOAL' },
     { type: 'out', text: 'Crescere come professionista della Cybersecurity', tone: 'accent' },
