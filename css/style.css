@@ -460,10 +460,92 @@ ul[role="list"] {
 }
 
 /* ── SKILLS ──────────────────────────────────────────────────────────────── */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+/* ── CARD CAROUSEL (Progetti / Skills) ─────────────────────────────────────
+   Le card si scorrono orizzontalmente (scroll-snap nativo); frecce + indicatore
+   in .carousel-controls. Su mobile 1 card + peek, su desktop piu card + peek. */
+.card-carousel { position: relative; }
+
+.carousel-viewport {
+  display: flex;
   gap: var(--space-4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  /* spazio verticale: l'overflow non deve tagliare hover-lift (-2px) e glow */
+  padding: 6px 2px 30px;
+  /* scrollbar nativa nascosta: l'affordance sono frecce + indicatore */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.carousel-viewport::-webkit-scrollbar { display: none; }
+.carousel-viewport:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+/* Ogni card: larghezza fissa -> mobile 1 + peek, desktop piu card + peek */
+.carousel-viewport > * {
+  flex: 0 0 clamp(260px, 82vw, 300px);
+  scroll-snap-align: start;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}
+.card-carousel.is-static .carousel-controls { display: none; }
+
+.carousel-arrow {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: transparent;
+  color: var(--text-1);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+.carousel-arrow:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 4px 18px -8px var(--accent-glow);
+}
+.carousel-arrow:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.carousel-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.carousel-progress {
+  position: relative;
+  flex: 0 1 auto;
+  width: min(280px, 42%);
+  height: 3px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.carousel-progress-thumb {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 30%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: transform var(--transition);
+  will-change: transform;
 }
 
 .skill-card {
@@ -479,23 +561,11 @@ ul[role="list"] {
   transform: translateY(-2px);
 }
 
-/* Certificazioni: card a tutta larghezza, due gruppi (possedute / in corso) con
-   un solo tag per gruppo; voci su 2 colonne ampie, leggibili senza spezzarsi */
-.skill-card--certs {
-  grid-column: 1 / -1;
-}
-/* Da 1180px in su (griglia a 4 colonne) la card si affianca a Networking:
-   occupa la 2a e 3a colonna, allineata al bordo di Programming; la 4a colonna
-   resta libera per un'eventuale box futura a fianco */
-@media (min-width: 1180px) {
-  .skill-card--certs {
-    grid-column: 2 / 4;
-  }
-}
+/* Certificazioni: card standard dentro il carosello, liste a colonna singola */
 .skill-card--certs .skill-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
-  gap: var(--space-3) var(--space-8);
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
 }
 .skill-card--certs .skill-list li {
   align-items: baseline;
@@ -583,11 +653,7 @@ ul[role="list"] {
 }
 
 /* ── PROJECTS ───────────────────────────────────────────────────────────── */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-4);
-}
+/* .projects-grid rimossa: la sezione Progetti usa ora .carousel-viewport */
 
 .project-card {
   background: var(--bg-2);
@@ -1139,12 +1205,7 @@ ul[role="list"] {
   .level-item { padding: var(--space-5) var(--space-6); }
 }
 
-@media (max-width: 480px) {
-  .skills-grid,
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-}
+/* (responsività del carosello gestita da .carousel-viewport > *) */
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

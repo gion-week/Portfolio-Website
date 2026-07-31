@@ -373,10 +373,70 @@ function escapeAttr(str) {
   return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
+/* ── CARD CAROUSELS (Progetti / Skills) ──────────────────────────────────────
+   Scroll orizzontale con scroll-snap nativo; frecce prev/next e indicatore di
+   scorrimento (thumb teal). Una sola funzione per tutte le sezioni carosello. */
+function initCarousels() {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll('.card-carousel').forEach(root => {
+    const viewport = root.querySelector('.carousel-viewport');
+    if (!viewport) return;
+    const prev  = root.querySelector('[data-dir="prev"]');
+    const next  = root.querySelector('[data-dir="next"]');
+    const thumb = root.querySelector('.carousel-progress-thumb');
+
+    // Ampiezza di uno "scatto": una card + il gap (fallback: 80% del viewport).
+    function step() {
+      const card = viewport.firstElementChild;
+      if (!card) return viewport.clientWidth * 0.8;
+      const gap = parseFloat(getComputedStyle(viewport).columnGap) || 0;
+      return card.getBoundingClientRect().width + gap;
+    }
+
+    // Aggiorna stato frecce, classe is-static e posizione/larghezza del thumb.
+    function update() {
+      const max = viewport.scrollWidth - viewport.clientWidth;
+      root.classList.toggle('is-static', max <= 1);
+      // tolleranza di qualche px: lo scroll-snap puo' riposare non esattamente a 0
+      if (prev) prev.disabled = viewport.scrollLeft <= 4;
+      if (next) next.disabled = viewport.scrollLeft >= max - 4;
+      if (thumb && viewport.scrollWidth > 0) {
+        const frac = viewport.clientWidth / viewport.scrollWidth;   // porzione visibile
+        const pos  = max > 0 ? viewport.scrollLeft / max : 0;       // 0..1
+        thumb.style.width = (frac * 100) + '%';
+        thumb.style.transform = 'translateX(' + (pos * (100 / frac - 100)) + '%)';
+      }
+    }
+
+    function go(dir) {
+      viewport.scrollBy({ left: dir * step(), behavior: reduce.matches ? 'auto' : 'smooth' });
+    }
+
+    if (prev) prev.addEventListener('click', () => go(-1));
+    if (next) next.addEventListener('click', () => go(1));
+
+    // Aggiornamento throttlato via rAF durante lo scroll.
+    let ticking = false;
+    viewport.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; update(); });
+    }, { passive: true });
+
+    window.addEventListener('resize', update);
+    // Prima misura DOPO il layout completo: a DOMContentLoaded clientWidth puo'
+    // non essere ancora definitivo e falserebbe la larghezza del thumb.
+    requestAnimationFrame(update);
+    window.addEventListener('load', update);
+  });
+}
+
 /* ── INIT ────────────────────────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   initTerminal();
   initNav();
   initModal();
+  initCarousels();
   loadWriteups();
 });
