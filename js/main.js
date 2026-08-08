@@ -140,7 +140,14 @@ const WARGAME_INFO = {
   breachlab: {
     label: 'Piattaforma CTF — BreachLab',
     url: 'https://breachlab.org/',
-    desc: 'BreachLab è una piattaforma di security training con macchine reali accessibili via SSH, organizzata in track tematiche. Qui è documentata la track Ghost, dedicata ai fondamentali di Linux e shell. I writeup sono in inglese; le flag non vengono pubblicate, come da regole della piattaforma.'
+    desc: 'BreachLab è una piattaforma di security training con macchine reali accessibili via SSH e container da sfruttare davvero, non solo da leggere. I contenuti sono organizzati in track tematiche, dai fondamentali di Linux fino allo sfruttamento avanzato. I writeup qui documentati sono in inglese; le flag non vengono pubblicate, come da regole della piattaforma.',
+    // Descrizione italiana per ogni track (chiave = nome track come in index.json).
+    // Aggiungere una voce qui quando si pubblica una nuova track.
+    tracks: {
+      Ghost: {
+        desc: 'Ghost è la track introduttiva di BreachLab, dedicata ai fondamentali di Linux e shell su macchine raggiungibili via SSH: filesystem, permessi, processi, networking, encoding. Ogni livello nasconde la password del successivo, da ricavare ragionando su comandi e output.'
+      }
+    }
   }
 };
 
@@ -257,11 +264,13 @@ function openWargameModal(category) {
     const showTrackLevels = (track) => {
       catEl.textContent = name;     // es. "BreachLab"
       titleEl.textContent = track;  // es. "Ghost"
-      infoEl.style.display = 'none';
-      levelsEl.innerHTML =
+      const trackDesc = (info.tracks && info.tracks[track] && info.tracks[track].desc) || '';
+      infoEl.style.display = '';
+      infoEl.innerHTML =
         '<button class="wargame-back" type="button">← Track</button>'
-        + byTrack.get(track).map(renderLevelItem).join('');
-      levelsEl.querySelector('.wargame-back').addEventListener('click', showTracks);
+        + (trackDesc ? `<p>${escapeHtml(trackDesc)}</p>` : '');
+      infoEl.querySelector('.wargame-back').addEventListener('click', showTracks);
+      levelsEl.innerHTML = byTrack.get(track).map(renderLevelItem).join('');
       wireLevelItems();
     };
 
