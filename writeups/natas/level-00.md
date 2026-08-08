@@ -55,7 +55,7 @@ La password per accedere al livello 1 è contenuta in un commento HTML nel sorge
 
 **Perché ispezionare il sorgente è stato il primo passo**
 
-La pagina afferma esplicitamente che la password è presente "su questa pagina", ma la pagina renderizzata non mostra nulla di utile. Questa è la situazione tipica che in web security porta immediatamente a guardare il sorgente HTML: il browser renderizza solo ciò che è visibile, come testo, immagini e form, ma scarta silenziosamente tutto il resto. Tra le cose che il browser non mostra mai all'utente finale ci sono:
+La pagina afferma esplicitamente che la password è presente "su questa pagina", ma la pagina renderizzata non mostra nulla di utile. Questa è la situazione tipica che in web security porta a guardare il sorgente HTML: il browser renderizza solo ciò che è visibile, come testo, immagini e form, ma scarta silenziosamente tutto il resto. Tra le cose che il browser non mostra mai all'utente finale ci sono:
 
 - **Commenti HTML** (`<!-- ... -->`): usati dagli sviluppatori per note interne, debug o — come in questo caso — per "nascondere" informazioni in modo del tutto inefficace
 - **Attributi `hidden`** su elementi HTML

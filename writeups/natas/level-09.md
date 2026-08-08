@@ -111,7 +111,7 @@ Dal punto di vista della vulnerabilità, la funzione usata non cambia la sostanz
 
 **Command injection e il ruolo del `;`**
 
-La shell (in questo caso `/bin/sh` su Linux, richiamata implicitamente da `passthru()`) interpreta il `;` come separatore tra comandi indipendenti: tutto ciò che viene prima è un comando, tutto ciò che viene dopo è un altro. Questo permette di "appendere" comandi arbitrari a quello originale. Il comando originale (`grep`) viene eseguito regolarmente ma il suo output è irrilevante perchè ciò che interessa è l'output del comando iniettato dopo il `;`.
+La shell (in questo caso `/bin/sh` su Linux, richiamata implicitamente da `passthru()`) interpreta il `;` come separatore tra comandi indipendenti: tutto ciò che viene prima è un comando, tutto ciò che viene dopo è un altro. Questo permette di "appendere" comandi arbitrari a quello originale. Il comando originale (`grep`) viene eseguito regolarmente ma il suo output è irrilevante perché ciò che interessa è l'output del comando iniettato dopo il `;`.
 
 Altre varianti di questo attacco usano `&&` (il secondo comando viene eseguito solo se il primo ha successo) o `||` (il secondo viene eseguito solo se il primo fallisce), o la subshell con `$(comando)` inserita direttamente nel parametro. Il principio è sempre lo stesso: caratteri speciali della shell nell'input vengono interpretati dal sistema operativo, non trattati come testo letterale.
 

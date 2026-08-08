@@ -33,7 +33,7 @@ La pagina mostra:
 
 > *Access disallowed. You are not logged in*
 
-A differenza del livello precedente, qui non si parla di provenienza della richiesta ma di uno **stato**: essere o non essere "loggati". Lo stato di login di un utente, in un'applicazione web, deve essere conservato in qualche modo tra una richiesta e l'altra dato che il protocollo HTTP di per sé non mantiene memoria tra richieste diverse (è *stateless*). Il meccanismo più comune per farlo è il cookie rendendolo il primo posto dove guardare.
+A differenza del livello precedente, qui non si parla di provenienza della richiesta ma di uno **stato**: essere o non essere "loggati". Lo stato di login di un utente, in un'applicazione web, deve essere conservato in qualche modo tra una richiesta e l'altra dato che il protocollo HTTP di per sé non mantiene memoria tra richieste diverse (è *stateless*). Il meccanismo più comune per farlo è il cookie, ed è quindi il primo posto dove guardare.
 
 ### Step 2 – Ispezione del cookie tramite DevTools
 
