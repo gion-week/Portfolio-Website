@@ -225,5 +225,96 @@ class TestRun(unittest.TestCase):
                 sw.run(sources, writeups, writeups / "index.json", base / "portfolio")
 
 
+class TestTracksLayout(unittest.TestCase):
+    """Layout annidato track/livello (repo tipo Breachlab)."""
+
+    def _make_track_source(self, repo):
+        track = repo / "Ghost-Track"
+        (track / "screenshots").mkdir(parents=True)
+        (track / "screenshots" / "0-a.png").write_bytes(b"\x89PNG")
+        (track / "screenshots" / ".gitkeep").write_text("", encoding="utf-8")
+        # screenshot di un livello non ancora scritto: NON deve essere copiato
+        (track / "screenshots" / "9-orphan.png").write_bytes(b"\x89PNG")
+        lvl0 = track / "Level 0 - First Contact"
+        lvl0.mkdir()
+        (lvl0 / "README.md").write_text(
+            "<!-- portfolio-desc: Primo contatto -->\n"
+            "# Ghost Level 0 - First Contact\n\n"
+            "![shot](../screenshots/0-a.png)\n", encoding="utf-8")
+        # cartella di scaffolding senza README (livello non ancora fatto)
+        (track / "Level 1 - Name Game").mkdir()
+        # roba da ignorare
+        (repo / "_template").mkdir()
+        (repo / "docs").mkdir()
+
+    def test_sync_source_tracks_nests_and_rewrites_image_path(self):
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d)
+            repo = base / "Breachlab"
+            repo.mkdir()
+            self._make_track_source(repo)
+            writeups = base / "portfolio" / "writeups"
+            writeups.mkdir(parents=True)
+            synced = sw.sync_source("../Breachlab", "breachlab",
+                                    writeups, base / "portfolio", layout="tracks")
+            self.assertEqual(synced, ["breachlab-ghost-00"])
+            md_path = writeups / "breachlab" / "ghost" / "level-00.md"
+            self.assertTrue(md_path.exists())
+            # screenshot copiato sotto la track
+            self.assertTrue(
+                (writeups / "breachlab" / "ghost" / "screenshots" / "0-a.png").exists())
+            self.assertFalse(
+                (writeups / "breachlab" / "ghost" / "screenshots" / ".gitkeep").exists())
+            # screenshot non referenziato da alcun README: NON copiato
+            self.assertFalse(
+                (writeups / "breachlab" / "ghost" / "screenshots" / "9-orphan.png").exists())
+            # path immagine riscritto ../screenshots/ -> ./screenshots/
+            content = md_path.read_text(encoding="utf-8")
+            self.assertIn("](./screenshots/0-a.png)", content)
+            self.assertNotIn("../screenshots/", content)
+            # scaffolding senza README ignorata
+            self.assertFalse((writeups / "breachlab" / "ghost" / "level-01.md").exists())
+
+    def test_discover_nested_sets_track_and_ids(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            md_dir = root / "breachlab" / "ghost"
+            md_dir.mkdir(parents=True)
+            (md_dir / "level-00.md").write_text(
+                "<!-- portfolio-desc: Primo contatto -->\n"
+                "# Ghost Level 0 - First Contact\n", encoding="utf-8")
+            entries = sw.discover_entries(root, {})
+            self.assertEqual(len(entries), 1)
+            e = entries[0]
+            self.assertEqual(e["id"], "breachlab-ghost-00")
+            self.assertEqual(e["category"], "breachlab")
+            self.assertEqual(e["track"], "Ghost")
+            self.assertEqual(e["level"], "00")
+            self.assertEqual(e["file"], "writeups/breachlab/ghost/level-00.md")
+            # ordine chiavi: track dopo category, prima di level
+            self.assertEqual(list(e.keys()),
+                             ["id", "title", "category", "track", "level",
+                              "description", "file"])
+
+    def test_flat_entries_have_no_track_key(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _make_writeups_tree(root, {("natas", "01"): "# Natas Level 1 → 2\n"})
+            entries = sw.discover_entries(root, {"natas-01": "x"})
+            self.assertNotIn("track", entries[0])
+
+    def test_regenerate_orders_breachlab_after_natas(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            _make_writeups_tree(root, {("natas", "01"): "# Natas Level 1 → 2\n"})
+            bl = root / "breachlab" / "ghost"
+            bl.mkdir(parents=True)
+            (bl / "level-00.md").write_text("# Ghost Level 0\n", encoding="utf-8")
+            existing = {"natas-01": "n1", "breachlab-ghost-00": "g0"}
+            entries = sw.regenerate_index(root, existing)
+            self.assertEqual([e["id"] for e in entries],
+                             ["natas-01", "breachlab-ghost-00"])
+
+
 if __name__ == "__main__":
     unittest.main()
