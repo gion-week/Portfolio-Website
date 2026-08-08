@@ -398,5 +398,32 @@
     "level": "16",
     "description": "Blind OS command injection sotto blacklist: bypass con command substitution e oracolo booleano su grep.",
     "file": "writeups/natas/level-16.md"
+  },
+  {
+    "id": "breachlab-ghost-00",
+    "title": "Ghost Level 0 - First Contact",
+    "category": "breachlab",
+    "track": "Ghost",
+    "level": "00",
+    "description": "KAEL's abandoned terminal, and the notes that point straight to the flag",
+    "file": "writeups/breachlab/ghost/level-00.md"
+  },
+  {
+    "id": "breachlab-ghost-01",
+    "title": "Ghost Level 1 - Name Game",
+    "category": "breachlab",
+    "track": "Ghost",
+    "level": "01",
+    "description": "KAEL's adversarial filenames, and the quoting trick that reads them anyway",
+    "file": "writeups/breachlab/ghost/level-01.md"
+  },
+  {
+    "id": "breachlab-ghost-02",
+    "title": "Ghost Level 2 - In The Shadows",
+    "category": "breachlab",
+    "track": "Ghost",
+    "level": "02",
+    "description": "KAEL's compartmentalized leads, hidden behind ls -a instead of a lock",
+    "file": "writeups/breachlab/ghost/level-02.md"
   }
 ]

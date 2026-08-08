@@ -28,7 +28,7 @@ function initTerminal() {
     { type: 'out', text: 'Google IT Support · Cisco Intro to Cybersecurity · CompTIA Security+ (in studio)' },
 
     { type: 'cmd', cwd: '~', text: 'ls projects/' },
-    { type: 'dir', items: ['security-toolkit/', 'bandit-writeups/', 'natas-writeups/', 'port-scanner/', 'win10-lab/'] },
+    { type: 'dir', items: ['security-toolkit/', 'bandit-writeups/', 'natas-writeups/', 'breachlab-writeups/', 'port-scanner/', 'win10-lab/'] },
 
     { type: 'cmd', cwd: '~', text: 'echo $GOAL' },
     { type: 'out', text: 'Crescere come professionista della Cybersecurity', tone: 'accent' },
@@ -136,6 +136,11 @@ const WARGAME_INFO = {
     label: 'OverTheWire — Natas',
     url: 'https://overthewire.org/wargames/natas/',
     desc: 'Natas insegna i fondamentali della sicurezza web lato server. Ogni livello introduce una categoria di vulnerabilità reale: source code inspection, directory traversal, bypass di autenticazione, SQL injection e code execution.'
+  },
+  breachlab: {
+    label: 'Piattaforma CTF — BreachLab',
+    url: 'https://breachlab.org/',
+    desc: 'BreachLab è una piattaforma di security training con macchine reali accessibili via SSH, organizzata in track tematiche. Qui è documentata la track Ghost, dedicata ai fondamentali di Linux e shell. I writeup sono in inglese; le flag non vengono pubblicate, come da regole della piattaforma.'
   }
 };
 
@@ -200,7 +205,7 @@ function openWargameModal(category) {
     </a>
   `;
 
-  levelsEl.innerHTML = levels.map(w => `
+  const renderLevelItem = (w) => `
     <div
       class="level-item"
       tabindex="0"
@@ -215,7 +220,27 @@ function openWargameModal(category) {
         ${w.description ? `<span class="level-item-desc">${escapeHtml(w.description)}</span>` : ''}
       </div>
     </div>
-  `).join('');
+  `;
+
+  // Se i livelli hanno un campo `track` (es. Breachlab), raggruppali per track
+  // con un sotto-header; altrimenti lista piatta (bandit, natas).
+  if (levels.some(w => w.track)) {
+    const order = [];
+    const byTrack = new Map();
+    levels.forEach(w => {
+      const t = w.track || '';
+      if (!byTrack.has(t)) { byTrack.set(t, []); order.push(t); }
+      byTrack.get(t).push(w);
+    });
+    levelsEl.innerHTML = order.map(t => `
+      <section class="wargame-track-group">
+        <h3 class="wargame-track-title">${escapeHtml(t)}</h3>
+        ${byTrack.get(t).map(renderLevelItem).join('')}
+      </section>
+    `).join('');
+  } else {
+    levelsEl.innerHTML = levels.map(renderLevelItem).join('');
+  }
 
   // Apertura writeup dal livello
   levelsEl.querySelectorAll('.level-item').forEach(item => {
