@@ -862,24 +862,34 @@ ul[role="list"] {
   margin: 0 auto;
 }
 
-/* Raggruppamento per track dentro la modal (es. Breachlab): un sotto-header
-   mono + i level-item della track. Categorie senza track restano piatte. */
-.wargame-track-group {
+/* Wargame multi-track (es. Breachlab): i bottoni delle track dentro la modal,
+   prima della lista livelli. I bottoni riusano lo stile .wargame-btn. */
+.wargame-tracks {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-4);
   width: 100%;
 }
-.wargame-track-title {
+/* Back dalla lista livelli ai bottoni track. */
+.wargame-back {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 var(--space-2) 0 0;
+  background: transparent;
+  border: none;
+  color: var(--text-1);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  text-align: center;
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.wargame-back:hover { color: var(--accent); }
+.wargame-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .level-item {

@@ -195,16 +195,6 @@ function openWargameModal(category) {
     ? info.label.split('—').map(s => s.trim())
     : ['Wargame', info.label];
 
-  catEl.textContent  = prefix;
-  titleEl.textContent = name;
-
-  infoEl.innerHTML = `
-    <p>${escapeHtml(info.desc)}</p>
-    <a href="${escapeAttr(info.url)}" target="_blank" rel="noopener">
-      ${escapeHtml(info.url)} ↗
-    </a>
-  `;
-
   const renderLevelItem = (w) => `
     <div
       class="level-item"
@@ -222,9 +212,27 @@ function openWargameModal(category) {
     </div>
   `;
 
-  // Se i livelli hanno un campo `track` (es. Breachlab), raggruppali per track
-  // con un sotto-header; altrimenti lista piatta (bandit, natas).
+  const renderInfo = () => `
+    <p>${escapeHtml(info.desc)}</p>
+    <a href="${escapeAttr(info.url)}" target="_blank" rel="noopener">
+      ${escapeHtml(info.url)} ↗
+    </a>
+  `;
+
+  // Collega ogni level-item (dopo il render) all'apertura del writeup.
+  const wireLevelItems = () => {
+    levelsEl.querySelectorAll('.level-item').forEach(item => {
+      const open = () => openWriteup(item.dataset.file, item.dataset.title);
+      item.addEventListener('click', open);
+      item.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      });
+    });
+  };
+
   if (levels.some(w => w.track)) {
+    // Wargame multi-track (es. Breachlab): prima i bottoni track, poi, al click,
+    // la lista livelli identica a bandit/natas con un back per tornare indietro.
     const order = [];
     const byTrack = new Map();
     levels.forEach(w => {
@@ -232,24 +240,41 @@ function openWargameModal(category) {
       if (!byTrack.has(t)) { byTrack.set(t, []); order.push(t); }
       byTrack.get(t).push(w);
     });
-    levelsEl.innerHTML = order.map(t => `
-      <section class="wargame-track-group">
-        <h3 class="wargame-track-title">${escapeHtml(t)}</h3>
-        ${byTrack.get(t).map(renderLevelItem).join('')}
-      </section>
-    `).join('');
-  } else {
-    levelsEl.innerHTML = levels.map(renderLevelItem).join('');
-  }
 
-  // Apertura writeup dal livello
-  levelsEl.querySelectorAll('.level-item').forEach(item => {
-    const open = () => openWriteup(item.dataset.file, item.dataset.title);
-    item.addEventListener('click', open);
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
-    });
-  });
+    const showTracks = () => {
+      catEl.textContent = prefix;   // es. "Piattaforma CTF"
+      titleEl.textContent = name;   // es. "BreachLab"
+      infoEl.style.display = '';
+      infoEl.innerHTML = renderInfo();
+      levelsEl.innerHTML = '<div class="wargame-tracks">' + order.map(t =>
+        `<button class="btn btn--outline wargame-btn wargame-track-btn" data-track="${escapeAttr(t)}">${escapeHtml(t)}</button>`
+      ).join('') + '</div>';
+      levelsEl.querySelectorAll('.wargame-track-btn').forEach(b => {
+        b.addEventListener('click', () => showTrackLevels(b.dataset.track));
+      });
+    };
+
+    const showTrackLevels = (track) => {
+      catEl.textContent = name;     // es. "BreachLab"
+      titleEl.textContent = track;  // es. "Ghost"
+      infoEl.style.display = 'none';
+      levelsEl.innerHTML =
+        '<button class="wargame-back" type="button">← Track</button>'
+        + byTrack.get(track).map(renderLevelItem).join('');
+      levelsEl.querySelector('.wargame-back').addEventListener('click', showTracks);
+      wireLevelItems();
+    };
+
+    showTracks();
+  } else {
+    // Wargame a lista singola (bandit, natas).
+    catEl.textContent = prefix;
+    titleEl.textContent = name;
+    infoEl.style.display = '';
+    infoEl.innerHTML = renderInfo();
+    levelsEl.innerHTML = levels.map(renderLevelItem).join('');
+    wireLevelItems();
+  }
 
   // Riavvia l'animazione del panel ad ogni apertura
   const panel = modal.querySelector('.wargame-panel');
