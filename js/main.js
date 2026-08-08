@@ -124,32 +124,50 @@ function initTerminal() {
 
 /* ── CTF WRITEUPS — WARGAME MODAL ───────────────────────────────────────── */
 
-// Descrizioni e link per ogni wargame.
-// Per aggiungere un nuovo wargame: aggiungi una voce qui e le entries in index.json.
-const WARGAME_INFO = {
-  bandit: {
-    label: 'OverTheWire — Bandit',
-    url: 'https://overthewire.org/wargames/bandit/',
-    desc: 'Bandit è il wargame di partenza di OverTheWire, pensato per chi si avvicina alla sicurezza informatica da zero. Insegna i fondamentali della command line Linux attraverso sfide progressive: gestione di file e permessi, SSH, processi, networking e crittografia di base.'
+// Piattaforme della sezione CTF. Ogni piattaforma è un bottone che apre la modal
+// con i suoi wargame/track come sotto-bottoni, poi la lista livelli.
+//  - wargames: elenco esplicito (categorie di index.json), es. OverTheWire;
+//  - trackCategory + tracks: wargame derivati dalle track di una categoria
+//    (campo `track` in index.json), es. BreachLab.
+// Descrizioni in italiano; per un nuovo wargame/track basta aggiungere la voce
+// qui (i livelli arrivano dal sync).
+const PLATFORMS = [
+  {
+    id: 'overthewire',
+    name: 'OverTheWire',
+    eyebrow: 'Piattaforma wargame',
+    url: 'https://overthewire.org/wargames/',
+    desc: 'OverTheWire è una raccolta di wargame di sicurezza pensati per imparare partendo da zero, giocati via SSH e browser su macchine reali. Ogni wargame copre un dominio diverso, dai fondamentali di Linux alla sicurezza web, un livello alla volta: la soluzione di un livello dà accesso al successivo.',
+    wargames: [
+      {
+        name: 'Bandit',
+        category: 'bandit',
+        url: 'https://overthewire.org/wargames/bandit/',
+        desc: 'Bandit è il wargame di partenza di OverTheWire, pensato per chi si avvicina alla sicurezza informatica da zero. Insegna i fondamentali della command line Linux attraverso sfide progressive: gestione di file e permessi, SSH, processi, networking e crittografia di base.'
+      },
+      {
+        name: 'Natas',
+        category: 'natas',
+        url: 'https://overthewire.org/wargames/natas/',
+        desc: 'Natas insegna i fondamentali della sicurezza web lato server. Ogni livello introduce una categoria di vulnerabilità reale: source code inspection, directory traversal, bypass di autenticazione, SQL injection e code execution.'
+      }
+    ]
   },
-  natas: {
-    label: 'OverTheWire — Natas',
-    url: 'https://overthewire.org/wargames/natas/',
-    desc: 'Natas insegna i fondamentali della sicurezza web lato server. Ogni livello introduce una categoria di vulnerabilità reale: source code inspection, directory traversal, bypass di autenticazione, SQL injection e code execution.'
-  },
-  breachlab: {
-    label: 'Piattaforma CTF — BreachLab',
+  {
+    id: 'breachlab',
+    name: 'BreachLab',
+    eyebrow: 'Piattaforma CTF',
     url: 'https://breachlab.org/',
     desc: 'BreachLab è una piattaforma di security training con macchine reali accessibili via SSH e container da sfruttare davvero, non solo da leggere. I contenuti sono organizzati in track tematiche, dai fondamentali di Linux fino allo sfruttamento avanzato. I writeup qui documentati sono in inglese; le flag non vengono pubblicate, come da regole della piattaforma.',
+    trackCategory: 'breachlab',
     // Descrizione italiana per ogni track (chiave = nome track come in index.json).
-    // Aggiungere una voce qui quando si pubblica una nuova track.
     tracks: {
       Ghost: {
         desc: 'Ghost è la track introduttiva di BreachLab, dedicata ai fondamentali di Linux e shell su macchine raggiungibili via SSH: filesystem, permessi, processi, networking, encoding. Ogni livello nasconde la password del successivo, da ricavare ragionando su comandi e output.'
       }
     }
   }
-};
+];
 
 let allWriteups = [];
 
@@ -158,7 +176,7 @@ async function loadWriteups() {
     const res = await fetch('writeups/index.json');
     if (!res.ok) throw new Error('HTTP ' + res.status);
     allWriteups = await res.json();
-    renderWargameButtons();
+    renderPlatformButtons();
   } catch (err) {
     const container = document.getElementById('wargame-buttons');
     if (container) container.innerHTML = '<p class="writeup-loading">Impossibile caricare i writeup. Assicurati di aprire il sito da un server HTTP.</p>';
@@ -166,29 +184,50 @@ async function loadWriteups() {
   }
 }
 
-function renderWargameButtons() {
+// Wargame/track (con livelli disponibili) di una piattaforma.
+function platformWargames(platform) {
+  if (platform.wargames) {
+    return platform.wargames
+      .map(wg => ({
+        name: wg.name, desc: wg.desc, url: wg.url,
+        levels: allWriteups.filter(w => w.category === wg.category),
+      }))
+      .filter(wg => wg.levels.length);
+  }
+  // Track dinamiche da una categoria (es. breachlab), nell'ordine di index.json.
+  const order = [];
+  const byTrack = new Map();
+  allWriteups
+    .filter(w => w.category === platform.trackCategory)
+    .forEach(w => {
+      const t = w.track || '';
+      if (!byTrack.has(t)) { byTrack.set(t, []); order.push(t); }
+      byTrack.get(t).push(w);
+    });
+  return order.map(t => ({
+    name: t,
+    desc: (platform.tracks && platform.tracks[t] && platform.tracks[t].desc) || '',
+    url: '',
+    levels: byTrack.get(t),
+  }));
+}
+
+function renderPlatformButtons() {
   const container = document.getElementById('wargame-buttons');
   if (!container) return;
 
-  // Ottieni categorie uniche nell'ordine in cui appaiono in index.json
-  const seen = new Set();
-  const categories = [];
-  allWriteups.forEach(w => {
-    if (!seen.has(w.category)) { seen.add(w.category); categories.push(w.category); }
-  });
-
-  container.innerHTML = categories.map(cat => {
-    const info = WARGAME_INFO[cat];
-    const label = info ? info.label.split('—')[1].trim() : cat.charAt(0).toUpperCase() + cat.slice(1);
-    return `<button class="btn btn--outline wargame-btn" data-wargame="${escapeAttr(cat)}">${label}</button>`;
-  }).join('');
+  // Solo le piattaforme che hanno almeno un wargame/track con livelli.
+  const platforms = PLATFORMS.filter(p => platformWargames(p).length);
+  container.innerHTML = platforms.map(p =>
+    `<button class="btn btn--outline wargame-btn" data-platform="${escapeAttr(p.id)}">${escapeHtml(p.name)}</button>`
+  ).join('');
 
   container.querySelectorAll('.wargame-btn').forEach(btn => {
-    btn.addEventListener('click', () => openWargameModal(btn.dataset.wargame));
+    btn.addEventListener('click', () => openPlatformModal(btn.dataset.platform));
   });
 }
 
-function openWargameModal(category) {
+function openPlatformModal(platformId) {
   const modal    = document.getElementById('wargame-modal');
   const catEl    = document.getElementById('wargame-modal-category');
   const titleEl  = document.getElementById('wargame-modal-title');
@@ -196,11 +235,9 @@ function openWargameModal(category) {
   const levelsEl = document.getElementById('wargame-modal-levels');
   if (!modal) return;
 
-  const info   = WARGAME_INFO[category] || { label: category, url: '#', desc: '' };
-  const levels = allWriteups.filter(w => w.category === category);
-  const [prefix, name] = info.label.includes('—')
-    ? info.label.split('—').map(s => s.trim())
-    : ['Wargame', info.label];
+  const platform = PLATFORMS.find(p => p.id === platformId);
+  if (!platform) return;
+  const wargames = platformWargames(platform);
 
   const renderLevelItem = (w) => `
     <div
@@ -219,13 +256,6 @@ function openWargameModal(category) {
     </div>
   `;
 
-  const renderInfo = () => `
-    <p>${escapeHtml(info.desc)}</p>
-    <a href="${escapeAttr(info.url)}" target="_blank" rel="noopener">
-      ${escapeHtml(info.url)} ↗
-    </a>
-  `;
-
   // Collega ogni level-item (dopo il render) all'apertura del writeup.
   const wireLevelItems = () => {
     levelsEl.querySelectorAll('.level-item').forEach(item => {
@@ -237,53 +267,40 @@ function openWargameModal(category) {
     });
   };
 
-  if (levels.some(w => w.track)) {
-    // Wargame multi-track (es. Breachlab): prima i bottoni track, poi, al click,
-    // la lista livelli identica a bandit/natas con un back per tornare indietro.
-    const order = [];
-    const byTrack = new Map();
-    levels.forEach(w => {
-      const t = w.track || '';
-      if (!byTrack.has(t)) { byTrack.set(t, []); order.push(t); }
-      byTrack.get(t).push(w);
-    });
-
-    const showTracks = () => {
-      catEl.textContent = prefix;   // es. "Piattaforma CTF"
-      titleEl.textContent = name;   // es. "BreachLab"
-      infoEl.style.display = '';
-      infoEl.innerHTML = renderInfo();
-      levelsEl.innerHTML = '<div class="wargame-tracks">' + order.map(t =>
-        `<button class="btn btn--outline wargame-btn wargame-track-btn" data-track="${escapeAttr(t)}">${escapeHtml(t)}</button>`
-      ).join('') + '</div>';
-      levelsEl.querySelectorAll('.wargame-track-btn').forEach(b => {
-        b.addEventListener('click', () => showTrackLevels(b.dataset.track));
-      });
-    };
-
-    const showTrackLevels = (track) => {
-      catEl.textContent = name;     // es. "BreachLab"
-      titleEl.textContent = track;  // es. "Ghost"
-      const trackDesc = (info.tracks && info.tracks[track] && info.tracks[track].desc) || '';
-      infoEl.style.display = '';
-      infoEl.innerHTML =
-        '<button class="wargame-back" type="button">← Track</button>'
-        + (trackDesc ? `<p>${escapeHtml(trackDesc)}</p>` : '');
-      infoEl.querySelector('.wargame-back').addEventListener('click', showTracks);
-      levelsEl.innerHTML = byTrack.get(track).map(renderLevelItem).join('');
-      wireLevelItems();
-    };
-
-    showTracks();
-  } else {
-    // Wargame a lista singola (bandit, natas).
-    catEl.textContent = prefix;
-    titleEl.textContent = name;
+  // Vista 1: i wargame/track della piattaforma come sotto-bottoni.
+  const showWargames = () => {
+    catEl.textContent = platform.eyebrow;   // es. "Piattaforma wargame"
+    titleEl.textContent = platform.name;    // es. "OverTheWire"
     infoEl.style.display = '';
-    infoEl.innerHTML = renderInfo();
-    levelsEl.innerHTML = levels.map(renderLevelItem).join('');
+    infoEl.innerHTML = `
+      <p>${escapeHtml(platform.desc)}</p>
+      <a href="${escapeAttr(platform.url)}" target="_blank" rel="noopener">
+        ${escapeHtml(platform.url)} ↗
+      </a>
+    `;
+    levelsEl.innerHTML = '<div class="wargame-tracks">' + wargames.map((wg, i) =>
+      `<button class="btn btn--outline wargame-btn wargame-track-btn" data-idx="${i}">${escapeHtml(wg.name)}</button>`
+    ).join('') + '</div>';
+    levelsEl.querySelectorAll('.wargame-track-btn').forEach(b => {
+      b.addEventListener('click', () => showWargameLevels(wargames[Number(b.dataset.idx)]));
+    });
+  };
+
+  // Vista 2: la lista livelli di un wargame/track (come per bandit/natas).
+  const showWargameLevels = (wg) => {
+    catEl.textContent = platform.name;   // eyebrow = piattaforma, es. "OverTheWire"
+    titleEl.textContent = wg.name;       // titolo = wargame/track, es. "Bandit"
+    infoEl.style.display = '';
+    infoEl.innerHTML =
+      '<button class="wargame-back" type="button">← Indietro</button>'
+      + (wg.desc ? `<p>${escapeHtml(wg.desc)}</p>` : '')
+      + (wg.url ? `<a href="${escapeAttr(wg.url)}" target="_blank" rel="noopener">${escapeHtml(wg.url)} ↗</a>` : '');
+    infoEl.querySelector('.wargame-back').addEventListener('click', showWargames);
+    levelsEl.innerHTML = wg.levels.map(renderLevelItem).join('');
     wireLevelItems();
-  }
+  };
+
+  showWargames();
 
   // Riavvia l'animazione del panel ad ogni apertura
   const panel = modal.querySelector('.wargame-panel');
